@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>唐僧叨叨 · IM 功能说明</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="view-simple">
+  <div class="page">
+    <header class="doc-top">
+      <div class="doc-top-grid">
+        <div class="doc-top-main">
+          <p class="doc-meta">产品功能说明 · 2026-08-25 · 面向业务了解 · 材料来自官网 + 66 调研归档</p>
+          <h1>唐僧叨叨 · IM 功能说明</h1>
+          <p class="doc-lead doc-lead-pro">本文单独说明<strong>唐僧叨叨</strong>能做什么：源码形态、免费基础功能明细、付费模块功能详情、界面示意与费用方案。材料来自官网公开页（含 <a href="https://tsdaodao.com/price/detail.html" target="_blank" rel="noopener">模块功能详情</a>）与既有调研归档；未做实际部署处标「待 PoC」。</p>
+          <p class="doc-lead doc-lead-simple">给业务同事：先看「一分钟结论」和「对我们要的对不对」表；术语见文末名词解释。</p>
+          <p class="doc-links">
+            官网：<a href="https://tsdaodao.com/" target="_blank" rel="noopener">tsdaodao.com</a>
+            ·
+            <a href="https://tsdaodao.com/guide/demo.html" target="_blank" rel="noopener">在线 Demo</a>
+            ·
+            <a href="https://tsdaodao.com/price/" target="_blank" rel="noopener">价目</a>
+            ·
+            <a href="https://tsdaodao.com/price/detail.html" target="_blank" rel="noopener">功能详情</a>
+            ·
+            <a href="../index.html">返回档案库</a>
+            ·
+            <a href="#">66 替代调研</a>
+          </p>
+        </div>
+        <aside class="doc-aside">
+          <div class="doc-view-switch" role="group" aria-label="阅读版本切换">
+            <button type="button" data-view="simple" class="is-on" aria-pressed="true">简化版</button>
+            <button type="button" data-view="pro" aria-pressed="false">详情版</button>
+          </div>
+          <p class="doc-view-hint">简化版 = 白话速览；详情版 = 功能清单与模块明细。</p>
+          <nav class="doc-toc toc-simple" aria-label="简化版目录">
+            <strong>目录</strong>
+            <ol>
+              <li><a href="#s-verdict">0. 一分钟结论</a></li>
+              <li><a href="#s-what">1. 它是什么</a></li>
+              <li><a href="#s-can">2. 能干什么</a></li>
+              <li><a href="#s-member">3. 群成员资料与互加</a></li>
+              <li><a href="#s-fee">4. 免费 / 收费</a></li>
+              <li><a href="#s-match">5. 对我们要的对不对</a></li>
+              <li><a href="#s-shot">6. 界面长什么样</a></li>
+              <li><a href="#s-next">7. 建议怎么看</a></li>
+              <li><a href="#s-words">8. 名词解释</a></li>
+            </ol>
+          </nav>
+          <nav class="doc-toc toc-pro" aria-label="详情版目录">
+            <strong>目录</strong>
+            <ol>
+              <li><a href="#quick-read">快速导读</a></li>
+              <li><a href="#p1">一、产品定位</a></li>
+              <li><a href="#p2">二、源码与覆盖端</a></li>
+              <li><a href="#p3">三、基础功能（免费）</a></li>
+              <li><a href="#p4">四、付费模块说明</a></li>
+              <li><a href="#p4-member">四附、群成员资料与互加边界</a></li>
+              <li><a href="#p5">五、界面截图</a></li>
+              <li><a href="#p6">六、体验入口</a></li>
+              <li><a href="#p7">七、费用与采购方案</a></li>
+              <li><a href="#p8">八、与业务诉求对照</a></li>
+            </ol>
+          </nav>
+        </aside>
+      </div>
+    </header>
+
+    <main>
+      <!-- ===== 简化版 ===== -->
+      <div class="mode-simple" id="mode-simple">
+        <section id="s-verdict" class="doc-quickread" aria-label="一分钟结论">
+          <h2>0. 一分钟结论（给业务）</h2>
+          <ol class="quick-list">
+            <li><strong>这是什么？</strong> 自己搭服务器的聊天软件；数据在自己机器上；手机 / 电脑 / 网页都能自己改、自己打包。</li>
+            <li><strong>日常聊天够不够？</strong> <strong>够。</strong> 免费版就有私聊、群聊、加好友、发图发语音等主路径。</li>
+            <li><strong>大概花多少？</strong> 先免费试装。正式要买哪些模块可按官网公开价目<strong>粗算量级</strong>（常用组合公开标价合计约 2.88w 量级）——这<strong>不是最终成交价</strong>；明确报价须与<strong>官网商务沟通 / 签合同</strong>后才能定。</li>
+            <li><strong>最大要注意什么？</strong> 「群成员保护」只明确有<strong>禁止群内互加</strong>；成员列表一般<strong>都能看</strong>；资料里可能有<strong>短号</strong>，抄号再搜加官网没写清会拦住 —— 必须试装确认。</li>
+            <li><strong>和选型报告什么关系？</strong> 本文只讲唐僧叨叨<strong>功能</strong>；和野火等怎么比，仍看 <a href="#">66 替代调研</a>。</li>
+          </ol>
+        </section>
+
+        <section id="s-what">
+          <h2>1. 它是什么</h2>
+          <p><strong>唐僧叨叨</strong>是一套可<strong>自己搭服务器</strong>的开源聊天软件（即时通讯 IM）。口号是「让企业轻松拥有自己的即时通讯」。</p>
+          <ul>
+            <li>聊天数据放在<strong>自己的服务器</strong>上，不依赖别人的聊天云。</li>
+            <li>不是「只租账号」的闭源软件：<strong>基础免费开源 + 高级功能按模块花钱</strong>；买「源码」后可自己改界面、自己打安装包。</li>
+            <li>手机 App、电脑、网页、管理后台都有；底层聊天通道叫 <strong>WuKongIM</strong>（可商用）。</li>
+            <li><strong>官网 Demo / 商店版</strong>只是体验用；正式上线应<strong>自建服务器 + 自己打包</strong>（安卓自己的安装包；iPhone 仍可用超级签，但包要自己出）。</li>
+          </ul>
+        </section>
+
+        <section id="s-can">
+          <h2>2. 能干什么（业务视角）</h2>
+          <p>用「业务会不会用到」来读，不讲技术实现：</p>
+          <div class="table-scroll">
+          <table class="table-simple">
+            <thead><tr><th>业务场景</th><th>免费基础版</th><th>要另买模块时</th></tr></thead>
+            <tbody>
+              <tr><td>私聊、加好友</td><td>✓ 有</td><td>—</td></tr>
+              <tr><td>建群、群聊、群公告</td><td>✓ 有</td><td>禁言 / 管理员 / 禁群内互加 → 买「群高级」</td></tr>
+              <tr><td>发文字 / 图 / 语音 / 名片</td><td>✓ 有</td><td>发文件 → 买「文件」；小视频另买</td></tr>
+              <tr><td>手机 + 电脑一起用</td><td>✓ 有</td><td>—</td></tr>
+              <tr><td>不想被随便搜到</td><td>部分入口在设置里</td><td>关手机号 / 短号搜索 → 买「安全与隐私」</td></tr>
+              <tr><td>通话</td><td>无（基础）</td><td>买「音视频」（可后置）</td></tr>
+              <tr><td>朋友圈 / 客服</td><td>无</td><td>另买；客服官网标开发中</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p class="hint">更细的功能点（撤回时长、最多几张图等）见详情版；下面单独说「群成员会不会被挖走」。</p>
+        </section>
+
+        <section id="s-member">
+          <h2>3. 群成员资料与互加（业务重点）</h2>
+          <p>白话问题：<strong>群友能不能互加、能不能把人的号抄走再搜？</strong></p>
+          <dl class="facts facts-tight">
+            <div><dt>能看成员列表吗</dt><dd><strong>能。</strong>官网写「可查看所有群成员」——这是<strong>能展开看全员</strong>的意思，<strong>不是</strong>「可以关掉不让看」的开关。要隐藏成员列表：文档没有现成开关，可能要二开。</dd></div>
+            <div><dt>点进资料能看到什么</dt><dd>官方写明：<strong>平台短号</strong>、群内昵称、入群方式 / 时间、头像昵称等；非好友还可能有「申请加好友」。</dd></div>
+            <div><dt>「禁止群内互加」管什么</dt><dd>群高级里有这个开关，管的是<strong>群里一键互加</strong>。官网<strong>没写</strong>：开了之后短号会不会藏起来、抄了短号去外面搜索还能不能加上。</dd></div>
+            <div><dt>群外还能怎么找人</dt><dd>还能用手机号 / 短号搜索加人；每人可在隐私里关掉「允许被搜」（要买安全与隐私模块）。这和「禁群内互加」是<strong>两件事</strong>。</dd></div>
+          </dl>
+          <div class="callout-warn" role="note">
+            <p class="callout-warn-title">业务请记住这两句</p>
+            <p>① 「可查看所有群成员」≠ 可关掉的隐私项。<br />② 「禁止群内互加」≠ 已证明「抄号也搜不到」。是否够用，必须试装。</p>
+          </div>
+        </section>
+
+        <section id="s-fee">
+          <h2>4. 免费 / 收费怎么理解</h2>
+          <dl class="facts facts-tight">
+            <div><dt>免费</dt><dd>日常聊天主路径（文字图语音、好友、基础群）开源可商用</dd></div>
+            <div><dt>两种买法</dt><dd>「非源码」公开标价更低，但不好自己深度改包；要自己改名、自己编译安装包，一般谈「源码」档</dd></div>
+            <div><dt>怎么看价钱</dt><dd>下表是<strong>官网公开价目归档</strong>（单位 w ≈ 万元），只作<strong>预算量级参考</strong>。打折、打包、服务期等<strong>须与官网商务沟通后</strong>才有明确价格；本文不代替报价单</dd></div>
+            <div><dt>常用组合（测算）</dt><dd>文件 + 群高级 + 安全与隐私，按公开源码标价相加约 <strong>2.88w 量级</strong>——仅测算，非正式成交价。全模块公开合计约 15w 级，多数业务不必一次买全</dd></div>
+            <div><dt>价钱不含</dt><dd>服务器、带宽、超级签证书、运维人工 —— 这些另算</dd></div>
+          </dl>
+          <div class="callout-warn" role="note">
+            <p class="callout-warn-title">定价说明</p>
+            <p>页面上的模块价与「约几万」均为<strong>公开资料归档 + 调研测算</strong>。业务拍板、采购立项请以<strong>与唐僧叨叨官网商务沟通后的书面报价 / 合同</strong>为准。</p>
+          </div>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>模块</th><th>白话</th><th>官网源码标价（归档）</th><th>要不要</th></tr></thead>
+            <tbody>
+              <tr><td>基础模块</td><td>日常聊天主路径</td><td>开源免费</td><td><strong>必用</strong></td></tr>
+              <tr><td>文件</td><td>发文件给好友 / 群</td><td>0.8w</td><td>常用则购</td></tr>
+              <tr><td>群高级功能</td><td>禁言、管理员、禁群内互加好友等</td><td>0.88w</td><td><strong>高相关</strong></td></tr>
+              <tr><td>安全与隐私</td><td>手机号 / 短号搜索保护、设备锁等</td><td>1.2w</td><td><strong>高相关</strong></td></tr>
+              <tr><td>旗舰</td><td>已读、截屏提醒、点赞等</td><td>1.8w</td><td>可选增强</td></tr>
+              <tr><td>音视频</td><td>单人 / 群视频通话</td><td>3.6w</td><td>可后置</td></tr>
+              <tr><td>其它</td><td>收藏、位置、标签、小视频、表情、朋友圈、客服</td><td>0.2～1.8w</td><td>按需</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p class="hint">单位 <code>w</code> = 万元量级。来源 <a href="https://tsdaodao.com/price/" target="_blank" rel="noopener">tsdaodao.com/price</a> 归档快照；实时价与成交价以官网 / 商务为准。</p>
+        </section>
+
+        <section id="s-match">
+          <h2>5. 对我们要的对不对（一眼表）</h2>
+          <p>对照常见业务诉求（含替代 66 场景）。「对得上」指公开文档；「要注意」= 文档有缺口或须试装。</p>
+          <div class="table-scroll">
+          <table class="table-simple">
+            <thead><tr><th>我们要的</th><th>唐僧叨叨</th><th>业务读法</th></tr></thead>
+            <tbody>
+              <tr><td>私聊 / 群聊 / 加好友</td><td>免费基础有</td><td><strong>对得上</strong></td></tr>
+              <tr><td>自己控制安装包</td><td>全端可自编译</td><td><strong>对得上</strong>（买源码后）</td></tr>
+              <tr><td>发文件、强群管理</td><td>要买模块</td><td>可计入常用组合测算（公开标价约 2.88w 量级）；成交价待商务</td></tr>
+              <tr><td>群里不能互加</td><td>有「禁止群内互加」开关</td><td>文档有；效果须<strong>试装</strong></td></tr>
+              <tr><td>群里不能看成员 / 藏资料</td><td>无「隐藏成员列表」开关；资料含短号</td><td><strong>要注意</strong> · 可能不够 / 要二开</td></tr>
+              <tr><td>抄短号再搜也加不上</td><td>官网未写禁互加会连带拦截</td><td><strong>要注意</strong> · 须试装；可叠加关搜索</td></tr>
+              <tr><td>通话 Tab</td><td>音视频模块另买</td><td>非刚需可后置</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+        <section id="s-shot">
+          <h2>6. 界面长什么样</h2>
+          <p>先看图建立感觉；也可直接点 <a href="https://tsdaodao.com/guide/demo.html" target="_blank" rel="noopener">在线 Demo</a> 或网页端 <a href="https://web.botgate.cn" target="_blank" rel="noopener">web.botgate.cn</a>（演示账号见详情版）。</p>
+          <div class="shot-row shot-row-wide">
+            <figure class="shot shot-page">
+              <img src="./assets/screenshots/tsdd-page-download.png" alt="Demo 下载页" data-lightbox />
+              <figcaption>Demo 页 · 扫码下载区</figcaption>
+            </figure>
+            <figure class="shot shot-page">
+              <img src="./assets/screenshots/tsdd-page-accounts.png" alt="多端下载与账号" data-lightbox />
+              <figcaption>多端下载 + 演示账号</figcaption>
+            </figure>
+          </div>
+          <div class="phone-carousel-shots panel-phones panel-gallery-grid" style="display:flex;flex-wrap:wrap;gap:0.55rem;margin-top:0.75rem;">
+            <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-demo-conversation.webp" alt="会话列表" data-lightbox /><figcaption>会话列表</figcaption></figure>
+            <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-demo-messages.webp" alt="群聊" data-lightbox /><figcaption>群聊</figcaption></figure>
+            <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-dark-list.png" alt="深色会话" data-lightbox /><figcaption>深色 · 会话</figcaption></figure>
+          </div>
+        </section>
+
+        <section id="s-next">
+          <h2>7. 建议怎么看</h2>
+          <ul>
+            <li><strong>业务同事：</strong>读完第 0～5 节即可；重点看「群成员」红框和「对不对」表。细节表交给详情版或技术同事。</li>
+            <li><strong>要谈费用：</strong>先按官网公开价目做<strong>预算量级</strong>（常用组合测算约 2.88w 级），再<strong>联系官网商务</strong>要正式报价；另加服务器与超级签成本。</li>
+            <li><strong>下一步（技术）：</strong>免费试装 → 重点测第 3 / 5 节的群保护与抄号路径 → 通过后再与商务确认采购清单与价格。</li>
+            <li><strong>和别家比：</strong>仍看 <a href="#">66 与其他 IM 竞品调研</a>（野火等）。</li>
+          </ul>
+          <p class="hint">模块三级功能清单、完整价目、方案 A～D → 切右上角<strong>详情版</strong>。</p>
+        </section>
+
+        <section id="s-words">
+          <h2>8. 名词解释</h2>
+          <dl class="facts facts-tight">
+            <div><dt>IM</dt><dd>即时通讯，就是聊天软件。</dd></div>
+            <div><dt>私有化 / 自建</dt><dd>程序装在自己的服务器上，聊天数据自己管，不是租别人的聊天云账号。</dd></div>
+            <div><dt>源码</dt><dd>可修改、可自己打包的程序代码。高级模块常分「非源码 / 源码」两档；要自己打安装包一般买源码。</dd></div>
+            <div><dt>超级签</dt><dd>iPhone 不经正规 App Store、用企业证书侧路安装的方式；证书可能掉签，需要续。</dd></div>
+            <div><dt>平台短号</dt><dd>类似「站内号 / 悟空号」一类可搜索的标识；从群进资料页时官网写明会显示。</dd></div>
+            <div><dt>群成员保护</dt><dd>业务说法：限制群里互看资料、互加好友，降低被挖用户风险。唐僧叨叨文档对「禁互加」较明确，对「藏成员 / 防抄号」不够明确。</dd></div>
+            <div><dt>试装 / PoC</dt><dd>先小范围装起来测：能不能聊、保护够不够，再决定花钱上线。</dd></div>
+            <div><dt>w（万）</dt><dd>官网价目常用单位，1w ≈ 人民币 1 万元量级；页面数字多为公开标价归档，<strong>不是</strong>已谈妥的成交价。</dd></div>
+          </dl>
+        </section>
+      </div>
+
+      <!-- ===== 详情版 ===== -->
+      <div class="mode-pro" id="mode-pro">
+        <section id="quick-read" class="doc-quickread" aria-label="快速导读">
+          <h2>快速导读（给业务）</h2>
+          <p class="compact">详情版偏清单与价目。若只想快速拍板，可先看右上角<strong>简化版</strong>；下面五句对齐全文：</p>
+          <ol class="quick-list">
+            <li><strong>产品：</strong>私有化开源 IM，基础免费，高级按模块买源码；可自编译安卓 / iOS（超级签）。</li>
+            <li><strong>聊天主路径：</strong>私聊 / 群聊 / 加好友 / 多端 —— 免费基础已覆盖（第三节）。</li>
+            <li><strong>钱：</strong>公开价目可粗算量级（常用组合测算约 2.88w 级）；<strong>明确成交价须官网商务沟通 / 合同</strong>（第七节）。</li>
+            <li><strong>风险点：</strong>「可查看所有群成员」非关项；禁互加有文档；防抄号外搜 / 藏成员列表无明确文档（四附）。</li>
+            <li><strong>本文边界：</strong>功能说明 ≠ 已选型上线；横向对比仍看 66 调研。</li>
+          </ol>
+          <div class="doc-read-paths">
+            <p class="doc-read-path"><strong>业务</strong>简化版 0～5 节 + 名词解释；细节可跳过表格</p>
+            <p class="doc-read-path"><strong>商务</strong>第四节公开价目归档 + 第七节测算方案；成交价走官网沟通</p>
+            <p class="doc-read-path"><strong>技术 / 研发</strong>四附 PoC 清单 + 第三节能力表 + 试装</p>
+          </div>
+        </section>
+
+        <section id="p1">
+          <h2>一、产品定位</h2>
+          <p>来源：<a href="https://tsdaodao.com/" target="_blank" rel="noopener">tsdaodao.com</a>、<a href="https://tsdaodao.com/guide/" target="_blank" rel="noopener">什么是唐僧叨叨</a>。</p>
+          <p>唐僧叨叨定位为<strong>轻量、高性能、重安全、可私有化部署</strong>的开源即时通讯系统，面向企业自建聊天能力。官方自称历时多年打磨的运营级开源 IM，通讯动力来自 <strong>WuKongIM</strong>。</p>
+          <dl class="facts">
+            <div><dt>开源协议</dt><dd>Apache 2.0（可商用）；服务端 / App / Web / PC 源码公开</dd></div>
+            <div><dt>部署方式</dt><dd>私有化：程序与数据在己方服务器</dd></div>
+            <div><dt>消息能力</dt><dd>TCP + ACK；离线消息、消息漫游；官方称消息可永久存储</dd></div>
+            <div><dt>安全宣传</dt><dd>私有二进制协议、DH + 流式加密（具体强度以实测 / 合同为准）</dd></div>
+            <div><dt>多端</dt><dd>支持约 1 个移动端 + 多个 Web / PC 同时在线，消息实时同步</dd></div>
+          </dl>
+        </section>
+
+        <section id="p2">
+          <h2>二、源码与覆盖端</h2>
+          <p>唐僧叨叨<strong>不是纯闭源 SaaS</strong>，而是<strong>类开源 + 模块化付费</strong>：各端均有完整代码可私有化部署、二次开发、己方编译分发（含超级签 IPA），与无源码、只能拿别人包的路径不同。</p>
+          <dl class="facts facts-tight">
+            <div><dt>覆盖端</dt><dd><strong>管理后台</strong>、<strong>PC</strong>（Windows / macOS；文档亦提及 Ubuntu）、<strong>H5 / Web</strong>、<strong>Android / iOS App</strong>，以及底层 <strong>WuKongIM</strong> 通讯服务端</dd></div>
+            <div><dt>开源部分</dt><dd><strong>基础模块</strong>已在 GitHub 开源（Apache 2.0），可免费商用；含私聊 / 群聊主能力所需的核心前后端代码</dd></div>
+            <div><dt>付费部分</dt><dd>在开源基础上扩展的<strong>高级模块</strong>（文件、群管理、隐私、音视频等）需按模块购买；可选「非源码」或「<strong>源码</strong>」档 —— 买源码后可完全自控编译与改包</dd></div>
+            <div><dt>选型含义</dt><dd>形态上接近「全家桶开源 IM」，但高级能力不是全免费；PoC 可先跑免费基础版，确认够用再按需加购模块源码</dd></div>
+            <div><dt>服务端</dt><dd>业务端 TangSengDaoDaoServer + 通讯端 WuKongIM</dd></div>
+            <div><dt>GitHub</dt><dd><a href="https://github.com/TangSengDaoDao/TangSengDaoDaoServer" target="_blank" rel="noopener">TangSengDaoDaoServer</a> 等仓库</dd></div>
+          </dl>
+          <p class="hint">自建场景：部署服务端 → 编译 / 配置各端客户端 → 安卓发 APK、iOS 可走超级签。商店版 Demo 与自建包不是同一条发布链。</p>
+        </section>
+
+        <section id="p3">
+          <h2>三、基础功能（开源免费）</h2>
+          <p>来源：<a href="https://tsdaodao.com/price/detail.html" target="_blank" rel="noopener">模块功能详情 · 基础版</a>。基础版本主要包含：文本 / 图片 / 语音 / 名片消息，联系人、用户资料、个人资料、通用设置等。<strong>功能以在线演示为准</strong>；未逐项实测处标待 PoC。</p>
+
+          <h3>3.1 会话内消息</h3>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>能力</th><th>官方说明（摘要）</th><th>对业务</th></tr></thead>
+            <tbody>
+              <tr><td>文本消息</td><td>普通文本；识别链接并显示主页标题；识别手机号可拨号 / 存通讯录；系统 emoji / 自定义 emoji</td><td>核心 ✓</td></tr>
+              <tr><td>图片消息</td><td>相册最多 9 张同时发送、拍摄、原图；发送进度；大图双击缩放；长按转发 / 存相册</td><td>核心 ✓</td></tr>
+              <tr><td>语音消息</td><td>长按录制松手发送；最长 60 秒；声贝动画；未下载显示进度</td><td>常用 ✓</td></tr>
+              <tr><td>名片消息</td><td>选择联系人发送 / 查看名片</td><td>常用 ✓</td></tr>
+              <tr><td>正在输入</td><td>单聊 / 群聊输入提醒；8 秒未发送则取消提醒</td><td>体验 ✓</td></tr>
+              <tr><td>系统消息</td><td>建群、加人/踢人、改群名、群公告、好友验证打招呼、非好友提醒等</td><td>常用 ✓</td></tr>
+              <tr><td>撤回</td><td>自己发送 3 分钟内可撤；群主或管理员可永久撤回成员消息</td><td>常用 ✓</td></tr>
+              <tr><td>转发 / 复制</td><td>单条转发；多选合并 / 逐条转发（最多 100 条）；文本可复制</td><td>常用 ✓</td></tr>
+              <tr><td>历史消息</td><td>下拉查看；可回到底部；退出后再进停留上次位置</td><td>常用 ✓</td></tr>
+              <tr><td>@ / 重发 / 头像</td><td>长按头像或输入 @；失败消息可重发；点头像看资料</td><td>体验 ✓</td></tr>
+              <tr><td>在线状态</td><td>群标题显示成员总数及在线人数；单聊显示对方在线</td><td>体验 ✓</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>3.2 会话列表</h3>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>能力</th><th>官方说明（摘要）</th><th>对业务</th></tr></thead>
+            <tbody>
+              <tr><td>基础信息</td><td>头像、时间、名称（优先备注）、最后一条预览、按时间排序</td><td>核心 ✓</td></tr>
+              <tr><td>未读 / 免打扰</td><td>红点；超 100 显示 99+；免打扰灰色提醒；Tab 总未读</td><td>核心 ✓</td></tr>
+              <tr><td>置顶 / 草稿 / @</td><td>置顶效果；草稿提醒；@ 强提醒</td><td>常用 ✓</td></tr>
+              <tr><td>状态</td><td>发送状态、已读状态、正在输入；Web/PC 登录显示；网络 / 同步状态</td><td>体验 ✓</td></tr>
+              <tr><td>加号菜单</td><td>创建群聊、添加好友、扫一扫</td><td>核心 ✓</td></tr>
+              <tr><td>全局搜索</td><td>搜联系人、群聊、聊天记录</td><td>常用 ✓</td></tr>
+              <tr><td>长按会话</td><td>开关通知、置顶、删除聊天</td><td>体验 ✓</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>3.3 会话设置（群 / 单聊）</h3>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>范围</th><th>官方说明（摘要）</th><th>对业务</th></tr></thead>
+            <tbody>
+              <tr><td>群聊设置</td><td>成员数、前 20 人预览、<strong>可展开看全部成员</strong>（能力说明，非「禁止查看成员」开关）；群主改名 / 删人；群公告；群备注 / 群内昵称；免打扰、置顶、存通讯录；清空记录；投诉；按成员 / 日期 / 图 / 视频 / 文件查记录；退群（群主退会移交）</td><td>常用 ✓</td></tr>
+              <tr><td>单聊设置</td><td>用户信息、加号建群、查记录、置顶、免打扰、投诉、截屏通知、撤回通知、清空记录</td><td>常用 ✓</td></tr>
+              <tr><td>禁言 / 管理员 / 邀请确认等</td><td>属<strong>群高级（付费）</strong>模块</td><td>见第四节</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>3.4 通讯录</h3>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>能力</th><th>官方说明（摘要）</th><th>对业务</th></tr></thead>
+            <tbody>
+              <tr><td>新朋友</td><td>申请红点、通过 / 拒绝、设备注；扫一扫、手机通讯录匹配、手机号搜索添加</td><td>核心 ✓</td></tr>
+              <tr><td>保存的群聊</td><td>已保存群列表、新建群入口</td><td>常用 ✓</td></tr>
+              <tr><td>联系人</td><td>拼音排序、总数、在线状态、官方 / 机器人标识；长按发消息 / 设备注</td><td>核心 ✓</td></tr>
+              <tr><td>个人名片</td><td>头像、备注 / 昵称、短号、群内昵称、入群方式与时间、性别；解除好友、拉黑、来源显示</td><td>常用 ✓</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>3.5 「我的」与设置</h3>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>能力</th><th>官方说明（摘要）</th><th>对业务</th></tr></thead>
+            <tbody>
+              <tr><td>登录用户信息</td><td>改头像 / 昵称；平台短号仅可改一次；二维码可保存；性别</td><td>常用 ✓</td></tr>
+              <tr><td>新消息通知</td><td>总开关、通知详情、声音、震动</td><td>常用 ✓</td></tr>
+              <tr><td>通用</td><td>深色模式、多语言（中 / 英）、字体大小、聊天背景、清缓存、关于 / 检查更新、退出登录</td><td>体验 ✓</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p class="hint">官网基础版清单中亦出现「消息收藏」入口；完整「我的收藏」列表能力对应付费<strong>收藏</strong>模块。部分「截屏通知 / 撤回通知」在旗舰模块亦有强化说明，以演示与合同为准。</p>
+        </section>
+
+        <section id="p4">
+          <h2>四、付费模块说明</h2>
+          <p>价目来源：<a href="https://tsdaodao.com/price/" target="_blank" rel="noopener">收费模块</a>（归档口径与 66 调研一致，单位 <code>w</code> = 万元人民币量级）。功能明细来源：<a href="https://tsdaodao.com/price/detail.html" target="_blank" rel="noopener">price/detail</a>。官方声明：<strong>功能以在线演示为准</strong>。</p>
+          <div class="callout-warn" role="note">
+            <p class="callout-warn-title">定价说明（重要）</p>
+            <p>下列模块价、合计与后文「方案 A～D」均为<strong>官网公开价目归档 + 调研测算</strong>，便于估预算量级。<strong>不是</strong>最终采购价，也<strong>不能</strong>直接当作「就是两万八」一类成交结论。明确价格须与<strong>唐僧叨叨官网商务沟通</strong>，并以<strong>合同 / 书面报价</strong>为准（折扣、打包、服务期可能不同）。</p>
+          </div>
+
+          <dl class="facts facts-tight">
+            <div><dt>基础模块</dt><dd><strong>开源免费商用</strong>：文本 / 图 / 语音 / 名片、联系人、资料、通用设置 —— PoC 可先只吃这一层</dd></div>
+            <div><dt>非源码合计</dt><dd>全部付费模块 <strong>7.88w</strong>（约 ¥78,800）</dd></div>
+            <div><dt>源码合计</dt><dd>全部付费模块 <strong>15.76w</strong>（约 ¥157,600）；一次性全买优惠 <strong>15.5w</strong>，送 2 个月技术服务</dd></div>
+            <div><dt>升级</dt><dd>一次购买后一年内可索要升级包 / 源码（合同签订起算）</dd></div>
+            <div><dt>技术支持</dt><dd>5×8 一对多咨询 <strong>¥2,999 / 月</strong>（每月最多 10 人）</dd></div>
+          </dl>
+          <p class="hint"><strong>采购读法：</strong>先用免费基础版验证部署 + 群聊；确认要买的模块清单后<strong>再找官网商务询价</strong>（公开表仅作量级参考）。音视频公开源码标价 3.6w 最贵，非刚需可后置。</p>
+
+          <h3>4.1 价目总表（官网公开标价 · 归档）</h3>
+          <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>模块</th>
+                <th>简介（官方）</th>
+                <th>非源码</th>
+                <th>源码</th>
+                <th>约合（源码）</th>
+                <th>业务相关度</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>基础模块</td><td>文本 / 图 / 语音 / 名片、联系人、资料、通用设置等</td><td>—</td><td>开源免费商用</td><td>¥0</td><td><strong>必用</strong></td></tr>
+              <tr><td>收藏</td><td>收藏文本、图片消息</td><td>0.1w</td><td>0.2w</td><td>¥2,000</td><td>可选</td></tr>
+              <tr><td>位置</td><td>选点、发位置、看位置</td><td>0.3w</td><td>0.6w</td><td>¥6,000</td><td>弱</td></tr>
+              <tr><td>文件</td><td>发文件给群 / 好友</td><td>0.4w</td><td>0.8w</td><td>¥8,000</td><td><strong>常用则购</strong></td></tr>
+              <tr><td>标签</td><td>联系人标签增删改查</td><td>0.4w</td><td>0.8w</td><td>¥8,000</td><td>可选</td></tr>
+              <tr><td>群高级功能</td><td>禁言、群管理、群头像、成员邀请机制等</td><td>0.44w</td><td>0.88w</td><td>¥8,800</td><td><strong>高</strong></td></tr>
+              <tr><td>小视频</td><td>录制 / 发送 / 播放小视频</td><td>0.44w</td><td>0.88w</td><td>¥8,800</td><td>可选</td></tr>
+              <tr><td>安全与隐私</td><td>手机号搜索保护、设备锁、黑名单等</td><td>0.6w</td><td>1.2w</td><td>¥12,000</td><td><strong>高</strong></td></tr>
+              <tr><td>表情商店</td><td>自制表情、动图表情</td><td>0.8w</td><td>1.6w</td><td>¥16,000</td><td>弱</td></tr>
+              <tr><td>朋友圈</td><td>发 / 看 / 评朋友圈</td><td>0.8w</td><td>1.6w</td><td>¥16,000</td><td>非刚需</td></tr>
+              <tr><td>客服</td><td>专属客服、身份标记、自动分配等（官网标开发中）</td><td>0.9w</td><td>1.8w</td><td>¥18,000</td><td>视业务</td></tr>
+              <tr><td>旗舰</td><td>已读未读、点赞、截屏消息、图片编辑等</td><td>0.9w</td><td>1.8w</td><td>¥18,000</td><td>可选增强</td></tr>
+              <tr><td>音视频</td><td>单人视频、群视频</td><td>1.8w</td><td>3.6w</td><td>¥36,000</td><td>可后置</td></tr>
+              <tr><td><strong>付费合计</strong></td><td>—</td><td><strong>7.88w</strong></td><td><strong>15.76w</strong></td><td>约 ¥157,600<br /><span class="quote-calc">全买优惠 15.5w</span></td><td>—</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>4.2 各模块功能详情（官方三级清单摘要）</h3>
+
+          <details class="feat-details" open>
+            <summary>群高级功能 · 0.88w 源码 · <strong>高相关</strong></summary>
+            <ul>
+              <li>设置群成员黑名单；群主添加管理员、管理员列表</li>
+              <li>群头像设置；全员禁言开 / 关；邀请确认开 / 关</li>
+              <li>点成员头像：单独禁言及禁言时长</li>
+              <li><strong>禁止群内互加好友</strong>开关</li>
+              <li>是否允许新成员查看历史消息；撤回群成员消息</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>安全与隐私 · 1.2w 源码 · <strong>高相关</strong></summary>
+            <ul>
+              <li>允许手机号搜索开 / 关；平台短号搜索开 / 关</li>
+              <li>登录密码修改（短信验证码）</li>
+              <li>设备锁：换设备登录需验证手机号；已登录设备列表</li>
+              <li>注销账号（短信验证；注销后信息销毁）</li>
+              <li>黑名单列表：拉入 / 拉出</li>
+            </ul>
+            <p class="hint">「禁止群内互加」与资料是否仍露出短号、能否抄号外搜，详见 <a href="#p4-member">四附</a>；完整是否满足业务仍<strong>待 PoC</strong>。</p>
+          </details>
+
+          <details class="feat-details">
+            <summary>文件 · 0.8w 源码 · 常用则购</summary>
+            <ul>
+              <li>面板增加文件入口；文件消息 UI（格式 / 大小 / 名称）</li>
+              <li>上传 / 下载、预览、转发</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>旗舰 · 1.8w 源码 · 可选增强</summary>
+            <ul>
+              <li>消息已读未读标记、已读成员列表、开关</li>
+              <li>截屏消息：拦截截屏并发送截屏消息</li>
+              <li>消息编辑与编辑状态显示；消息点赞 / 点赞列表</li>
+              <li>图片编辑：涂鸦、裁剪、加文字、滤镜</li>
+              <li>按日期 / 成员 / 图片 / 关键字查历史</li>
+              <li>会话设置：截屏通知、撤回通知</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>音视频 · 3.6w 源码 · 可后置</summary>
+            <ul>
+              <li>拨打入口、消息 UI、拨打 / 接听 / 接通后 UI</li>
+              <li>会议模式音视频</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>收藏 · 0.2w 源码</summary>
+            <ul>
+              <li>会话内收藏文本 / 图片</li>
+              <li>我的收藏列表（图片、文本、时间、作者）；删除、发给朋友、复制、图片缩放</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>小视频 · 0.88w 源码</summary>
+            <ul>
+              <li>录制约 15 秒或选相册视频；播放、显示大小、存本地、下载进度、转发</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>位置 · 0.6w 源码</summary>
+            <ul>
+              <li>面板位置入口；发当前位置 / 搜索位置；查看对方位置与截图</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>标签 · 0.8w 源码</summary>
+            <ul>
+              <li>选联系人新建标签；列表、添加、删除、修改</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>表情商店 · 1.6w 源码</summary>
+            <ul>
+              <li>聊天面板表情入口、emoji / 收藏分类、搜索</li>
+              <li>自制表情（相册选图）、整理排序 / 删除</li>
+              <li>平台表情商店：添加一组、详情、我的表情管理</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>朋友圈 · 1.6w 源码 · 非刚需</summary>
+            <ul>
+              <li>发图 / 视频 / 文本；位置；提醒某人；可见范围（公开 / 私有 / 部分可见 / 不给谁看）</li>
+              <li>图片最多 9 张可排序；视频限 1 个；上传进度</li>
+              <li>列表：封面、点赞评论、大图转发 / 收藏、新消息入口等</li>
+            </ul>
+          </details>
+
+          <details class="feat-details">
+            <summary>客服 · 1.8w 源码 · 官网标注「开发中」</summary>
+            <ul>
+              <li>通讯录专属客服入口；客服 / 访客身份标记</li>
+              <li>访客消息自动匹配客服；欢迎词；访客资料详情</li>
+            </ul>
+          </details>
+        </section>
+
+        <section id="p4-member">
+          <h2>四附、群成员资料与「禁互加」边界</h2>
+          <p>针对业务常见诉求：「群里最好限制互看资料、互加好友；即使不能互加，会不会记下 ID / 短号再去搜索加人」。以下按官网公开页归纳；来源：<a href="https://tsdaodao.com/price/detail.html" target="_blank" rel="noopener">模块功能详情</a>、<a href="https://tsdaodao.com/dev/manager/user-manual/group/grouplist.html" target="_blank" rel="noopener">管理后台 · 群管理</a>、API 字段 <code>forbidden_add_friend</code>。</p>
+
+          <h3>已明确（官网有写）</h3>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>点</th><th>官方说明</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>查看群成员</td>
+                <td>群聊设置原文：「默认显示前20位群成员」「<strong>可查看所有群成员</strong>」；点消息 / 成员头像可查看用户资料</td>
+                <td>这是<strong>界面能力说明</strong>（可展开看全员），<strong>不是</strong>可关闭的隐私开关。文档无「禁止查看群成员列表」项；要隐藏成员列表 → <strong>待 PoC / 可能二开</strong></td>
+              </tr>
+              <tr>
+                <td>从群进入的资料字段</td>
+                <td>个人名片：显示<strong>用户平台短号</strong>；从群内进入显示群内昵称、<strong>入群方式及入群时间</strong>、性别等；非好友显示「申请加好友」</td>
+                <td>资料含可用于识别的<strong>短号</strong>，不只是昵称头像</td>
+              </tr>
+              <tr>
+                <td>禁止群内互加</td>
+                <td>群管理模块：<strong>禁止群内互加好友</strong>开关；API：<code>forbidden_add_friend</code>（是否群内禁止加好友）</td>
+                <td>明确存在「挡群内互加」能力</td>
+              </tr>
+              <tr>
+                <td>群外搜索加人</td>
+                <td>可通过手机号搜索用户添加；安全与隐私可开 / 关「允许手机号搜索」「允许平台短号搜索」</td>
+                <td>搜索加人是<strong>另一套开关</strong>，文档未写与禁互加自动联动</td>
+              </tr>
+              <tr>
+                <td>管理后台（运营侧）</td>
+                <td>群成员列表可查看：用户昵称、<strong>用户 ID</strong>、头像、成员角色、群内备注、入群时间</td>
+                <td>后台可见内部用户 ID；不等于 C 端群友一定能看到同一字段</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>未写清（不能当已确认结论）</h3>
+          <div class="callout-warn" role="note">
+            <p class="callout-warn-title">文档空白 · 须 PoC</p>
+            <ul>
+              <li>「可查看所有群成员」<strong>不要读成开关</strong>：与「开启/关闭全员禁言」「禁止群内互加好友」等写法不同，官网未提供「关闭后普通成员不能看成员列表」的配置说明。</li>
+              <li>开启「禁止群内互加好友」后，官网<strong>没有</strong>正面说明是否同时：隐藏资料页短号 / 内部 ID、去掉「申请加好友」按钮、拦截「抄短号 → 添加好友全局搜索再加」。因此<strong>不能</strong>写成「禁互加 = 群成员信息不可被记录、不可再搜到」。</li>
+            </ul>
+          </div>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>能力</th><th>文档是否清楚</th><th>业务读法</th></tr></thead>
+            <tbody>
+              <tr><td>成员列表可看全员</td><td>有（能力描述）</td><td>默认可见；<strong>无</strong>官方「关闭查看」开关</td></tr>
+              <tr><td>禁止群内互加</td><td>有（明确开关）</td><td>多半挡群内资料页一键加好友</td></tr>
+              <tr><td>资料是否仍露出短号</td><td>有「会显示短号」；无「禁互加后隐藏」</td><td>信息仍可能被抄走 · <strong>待 PoC</strong></td></tr>
+              <tr><td>用短号 / 手机号全局搜索再加</td><td>有搜索能力；无写与禁互加联动</td><td>旁路加人是否通 · <strong>待 PoC</strong></td></tr>
+              <tr><td>C 端是否暴露后台同款「用户 ID」</td><td>未写</td><td>待 PoC；已知明确露出的标识是<strong>平台短号</strong></td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>建议 PoC 清单（针对本块）</h3>
+          <ol>
+            <li>普通成员打开群设置：是否始终能展开「全部成员」（确认无隐藏列表开关）。</li>
+            <li>开启「禁止群内互加」后，点群友资料：短号是否还显示、「申请加好友」是否还在。</li>
+            <li>记下短号，走「添加好友 → 短号搜索」能否加上。</li>
+            <li>对方关闭「允许短号搜索 / 手机号搜索」后，上述路径是否失败。</li>
+            <li>C 端群友资料是否出现与管理后台一致的内部用户 ID（或仅短号）。</li>
+          </ol>
+          <p class="hint">若业务强依赖「隐藏群成员 / 禁互加挡不住抄号外搜」，需叠加：默认关短号 / 手机号搜索、二开隐藏成员列表或资料字段，或评估其它方案。</p>
+        </section>
+
+        <section id="p5">
+          <h2>五、界面截图</h2>
+          <p>截图来自既有调研归档（官方 Demo CDN 原图本地化），点击可放大。</p>
+          <div class="shot-row shot-row-wide">
+            <figure class="shot shot-page">
+              <img src="./assets/screenshots/tsdd-page-download.png" alt="Demo 下载页" data-lightbox />
+              <figcaption>Demo 页 · 扫码下载区</figcaption>
+            </figure>
+            <figure class="shot shot-page">
+              <img src="./assets/screenshots/tsdd-page-accounts.png" alt="多端下载与账号" data-lightbox />
+              <figcaption>多端下载 + 演示账号表</figcaption>
+            </figure>
+          </div>
+          <div class="phone-carousel" data-carousel>
+            <div class="phone-carousel-tabs" role="tablist">
+              <button type="button" class="is-on" data-go="0" role="tab" aria-selected="true">会话 / 群聊</button>
+              <button type="button" data-go="1" role="tab" aria-selected="false">机器人</button>
+              <button type="button" data-go="2" role="tab" aria-selected="false">PC 多端</button>
+              <button type="button" data-go="3" role="tab" aria-selected="false">深色模式</button>
+            </div>
+            <div class="phone-carousel-view">
+              <button type="button" class="phone-carousel-btn prev" aria-label="上一组">‹</button>
+              <div class="phone-carousel-clip">
+                <div class="phone-carousel-track">
+                  <div class="phone-carousel-panel panel-n2">
+                    <div class="phone-carousel-copy">
+                      <h4>会话列表与群聊</h4>
+                      <p>会话列表（搜索 / + / 未读）、群聊（表情 / 语音条）；信息架构接近日常 IM。</p>
+                    </div>
+                    <div class="phone-carousel-shots panel-phones panel-gallery-grid">
+                      <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-demo-conversation.webp" alt="会话列表" data-lightbox /><figcaption>会话列表</figcaption></figure>
+                      <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-demo-messages.webp" alt="群聊" data-lightbox /><figcaption>群聊</figcaption></figure>
+                    </div>
+                  </div>
+                  <div class="phone-carousel-panel panel-n2">
+                    <div class="phone-carousel-copy">
+                      <h4>机器人与扩展</h4>
+                      <p>官方 Demo 含机器人对话及其它扩展能力示意。</p>
+                    </div>
+                    <div class="phone-carousel-shots panel-phones panel-gallery-grid">
+                      <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-demo-robot.webp" alt="机器人" data-lightbox /><figcaption>机器人</figcaption></figure>
+                      <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-demo-other.webp" alt="其它" data-lightbox /><figcaption>其它</figcaption></figure>
+                    </div>
+                  </div>
+                  <div class="phone-carousel-panel">
+                    <div class="phone-carousel-copy">
+                      <h4>PC / 多端</h4>
+                      <p>手机与桌面并列、群聊与群资料侧栏。</p>
+                    </div>
+                    <div class="phone-carousel-shots panel-stack">
+                      <figure class="shot shot-full"><img src="./assets/screenshots/tsdd-orig-pc11.png" alt="PC 多端" data-lightbox /><figcaption>会话 + PC + 手机群聊</figcaption></figure>
+                      <figure class="shot shot-full"><img src="./assets/screenshots/tsdd-orig-pc22.png" alt="群资料" data-lightbox /><figcaption>群信息 + 成员侧栏</figcaption></figure>
+                    </div>
+                  </div>
+                  <div class="phone-carousel-panel">
+                    <div class="phone-carousel-copy">
+                      <h4>深色模式</h4>
+                      <p>深色会话 / 群聊 / 收藏 / Web 登录。</p>
+                    </div>
+                    <div class="phone-carousel-shots panel-phones panel-gallery-grid">
+                      <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-dark-list.png" alt="深色会话" data-lightbox /><figcaption>深色 · 会话</figcaption></figure>
+                      <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-dark-chat.png" alt="深色群聊" data-lightbox /><figcaption>深色 · 群聊</figcaption></figure>
+                      <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-dark-fav.png" alt="深色收藏" data-lightbox /><figcaption>深色 · 收藏</figcaption></figure>
+                      <figure class="shot shot-phone"><img src="./assets/screenshots/tsdd-dark-web.png" alt="深色 Web" data-lightbox /><figcaption>深色 · Web</figcaption></figure>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="phone-carousel-btn next" aria-label="下一组">›</button>
+            </div>
+            <p class="phone-carousel-step"><span data-step>1</span> / 4 · <span data-label>会话 / 群聊</span></p>
+          </div>
+        </section>
+
+        <section id="p6">
+          <h2>六、体验入口</h2>
+          <dl class="facts facts-tight">
+            <div><dt>Demo 页</dt><dd><a href="https://tsdaodao.com/guide/demo.html" target="_blank" rel="noopener">tsdaodao.com/guide/demo.html</a></dd></div>
+            <div><dt>Web</dt><dd><a href="https://web.botgate.cn" target="_blank" rel="noopener">web.botgate.cn</a></dd></div>
+            <div><dt>Android</dt><dd>Demo 页扫码</dd></div>
+            <div><dt>iOS</dt><dd>App Store 搜「唐僧叨叨」（商店体验版）；自建仍建议自编译 IPA → 超级签，不依赖商店审核版</dd></div>
+            <div><dt>Windows</dt><dd><a href="https://file.githubim.com/download/TangSengDaoDao-latest.exe" target="_blank" rel="noopener">TangSengDaoDao-latest.exe</a></dd></div>
+            <div><dt>Mac</dt><dd><a href="https://file.githubim.com/download/TangSengDaoDao-latest.dmg" target="_blank" rel="noopener">Intel .dmg</a> · <a href="https://file.githubim.com/download/TangSengDaoDao-latest-arm64.dmg" target="_blank" rel="noopener">Apple Silicon .dmg</a></dd></div>
+          </dl>
+          <h3>演示账号</h3>
+          <p class="hint">App 登录页<strong>长按标题</strong>可进入手机号登录。</p>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>账号</th><th>密码</th></tr></thead>
+            <tbody>
+              <tr><td>15900000002</td><td>a1234567</td></tr>
+              <tr><td>15900000003</td><td>a1234567</td></tr>
+              <tr><td>15900000004</td><td>a1234567</td></tr>
+              <tr><td>15900000005</td><td>a1234567</td></tr>
+              <tr><td>15900000006</td><td>a1234567</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+        <section id="p7">
+          <h2>七、费用与采购方案（调研测算 · 非成交价）</h2>
+          <p>以下按「私聊 / 群聊 / 加好友 + 己方编译分发」归纳，模块按官网「<strong>源码</strong>」公开标价相加，仅作<strong>预算量级与采购组合建议</strong>。<strong>非官方报价单、非最终成交价</strong>；具体金额、折扣、交付与服务期须<strong>与官网商务沟通后</strong>以合同为准。</p>
+
+          <h3>7.1 业务诉求 → 模块映射</h3>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>业务诉求</th><th>建议模块</th><th>官网源码标价（归档）</th></tr></thead>
+            <tbody>
+              <tr><td>私聊、加好友、消息可靠</td><td>基础模块（开源）</td><td>¥0</td></tr>
+              <tr><td>建群、群运营（禁言 / 管理 / 邀请机制）</td><td>群高级功能</td><td>0.88w</td></tr>
+              <tr><td>运营发图 / 发文件</td><td>文件</td><td>0.8w</td></tr>
+              <tr><td>群成员保护（限制互加等，待 PoC）</td><td>群高级禁互加 + 安全与隐私（搜号开关）；资料仍可能露短号，抄号外搜未写清</td><td>1.2w + 已含群高级</td></tr>
+              <tr><td>通话 Tab（非硬性）</td><td>音视频（可选后置）</td><td>3.6w</td></tr>
+              <tr><td>朋友圈 / 客服 / 位置等</td><td>暂不纳入</td><td>—</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>7.2 分档方案</h3>
+          <div class="table-scroll">
+          <table class="table-quote">
+            <thead><tr><th>方案</th><th>包含模块（源码档 · 测算）</th><th>适用</th><th>公开标价合计（测算）</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>A · PoC 验证</strong></td>
+                <td>基础模块</td>
+                <td>先验证超级签 + 私聊 / 群聊；零 license 公开成本</td>
+                <td><strong>¥0</strong>（开源）</td>
+              </tr>
+              <tr>
+                <td><strong>B · 常用上线组合（测算主选）</strong></td>
+                <td>基础 + 文件 + 群高级 + 安全与隐私</td>
+                <td>覆盖主路径 + 常见运营；群保护能力须 PoC 确认</td>
+                <td><strong>约 2.88w 量级</strong><br /><span class="quote-calc">0.8 + 0.88 + 1.2 = 2.88w（公开标价相加）</span><br /><span class="quote-calc">成交价待商务确认</span></td>
+              </tr>
+              <tr>
+                <td><strong>C · 增强版（测算）</strong></td>
+                <td>方案 B + 旗舰（已读 / 截屏通知等）</td>
+                <td>偏「企业感」体验；仍非硬性要求</td>
+                <td><strong>约 4.68w 量级</strong><br /><span class="quote-calc">2.88 + 1.8 = 4.68w；成交价待商务</span></td>
+              </tr>
+              <tr>
+                <td><strong>D · 含音视频（测算）</strong></td>
+                <td>方案 B + 音视频</td>
+                <td>要对标「通话」Tab 时考虑；否则后置</td>
+                <td><strong>约 6.48w 量级</strong><br /><span class="quote-calc">2.88 + 3.6 = 6.48w；成交价待商务</span></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <dl class="facts facts-tight quote-summary">
+            <div><dt>调研建议</dt><dd>优先走<strong>方案 A → B</strong>：免费 PoC 通过后，按方案 B 模块清单<strong>向官网商务询价</strong>；公开标价相加约 2.88w 量级，仅作预算参考</dd></div>
+            <div><dt>明确价格怎么来</dt><dd>打开官网「商务联系」或文档商务入口沟通：要哪些模块、要源码还是非源码、要不要技术支持 —— <strong>以对方书面报价 / 合同为准</strong></dd></div>
+            <div><dt>可选服务（公开标价）</dt><dd>5×8 技术支持公开标价约 <strong>¥2,999 / 月</strong>（是否购买、能否议价以商务为准）</dd></div>
+            <div><dt>不含</dt><dd>服务器 / 带宽 / 超级签证书 / 运维人力；全模块公开打包约 15.5w 对多数业务<strong>明显过剩</strong>，不建议未询价就按全买立项</dd></div>
+            <div><dt>待验证</dt><dd>「群成员保护」——须按 <a href="#p4-member">四附 PoC 清单</a> 实测：禁互加后短号是否仍显示、抄短号全局搜索能否再加</dd></div>
+          </dl>
+          <p class="hint">66 调研中的对应测算见 <a href="#">唐僧叨叨报价章节</a>，口径同样为调研测算，非正式成交价。</p>
+        </section>
+
+        <section id="p8">
+          <h2>八、与业务诉求对照</h2>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>业务常见诉求</th><th>唐僧叨叨对应</th><th>状态</th></tr></thead>
+            <tbody>
+              <tr><td>私聊、加好友、消息可靠</td><td>基础模块</td><td>公开能力齐全；待 PoC</td></tr>
+              <tr><td>建群、群运营</td><td>基础群 + 群高级模块</td><td>禁言 / 管理员等需购模块</td></tr>
+              <tr><td>发图 / 发文件</td><td>基础含图；文件需模块</td><td>按需购</td></tr>
+              <tr><td>群成员保护（限制互看 / 互加）</td><td>「可查看所有群成员」= 能力说明非关项；有「禁止群内互加」+ 搜号隐私开关；资料含<strong>短号</strong>；抄号外搜 / 隐藏成员列表见 <a href="#p4-member">四附</a></td><td><strong>待 PoC</strong>（禁互加有文档；隐藏成员列表 / 防抄号外搜无明确文档）</td></tr>
+              <tr><td>自己控制安装包</td><td>全端源码可自编译</td><td>适合超级签 / 自托管 APK</td></tr>
+              <tr><td>通话</td><td>音视频模块</td><td>可后置</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="callout-warn" role="note">
+            <p class="callout-warn-title">说明</p>
+            <p>本文是<strong>功能说明</strong>，方便业务理解产品能力；不等于已完成上线决策。选型对比、与其它 IM 的取舍，请仍看 <a href="#">66 与其他 IM 竞品调研</a>。</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="doc-foot">
+      <a href="../index.html">档案库首页</a>
+      ·
+      截图路径复用 <code>./assets/screenshots/</code>
+      ·
+      功能明细对齐 <a href="https://tsdaodao.com/price/detail.html" target="_blank" rel="noopener">官方模块功能详情</a>
+      ·
+      原 66 调研文件未改动
+    </footer>
+  </div>
+  <script src="js/carousel.js"></script>
+  <script src="js/view-mode.js"></script>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>主播管理 · 人气值加成示意</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: auto !important;
+      min-height: 0 !important;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f0f2f5; color: rgba(0, 0, 0, 0.88); font-size: 13px; padding: 12px;
+      overflow-x: hidden;
+    }
+    .hint {
+      margin-bottom: 10px; padding: 8px 10px; border-radius: 6px;
+      background: #fff7e6; border: 1px solid #ffd591; color: #ad6800; line-height: 1.55;
+    }
+    .tabs {
+      display: flex; gap: 0; background: #fff; border: 1px solid #f0f0f0;
+      border-bottom: none; border-radius: 8px 8px 0 0; padding: 0 8px;
+    }
+    .tab {
+      padding: 10px 14px; color: rgba(0,0,0,.65); cursor: default; border-bottom: 2px solid transparent;
+    }
+    .tab.active { color: #1677ff; border-bottom-color: #1677ff; font-weight: 600; }
+    .card {
+      background: #fff; border: 1px solid #f0f0f0; border-radius: 0 0 8px 8px;
+      padding: 14px 16px 16px;
+    }
+    .bar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .bar label { color: rgba(0,0,0,.65); }
+    .bar input {
+      height: 32px; width: 200px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 0 10px;
+    }
+    .btn {
+      height: 32px; padding: 0 14px; border-radius: 6px; border: 1px solid #d9d9d9;
+      background: #fff; cursor: pointer; font-size: 13px; line-height: 30px;
+    }
+    .btn:hover { opacity: .92; }
+    .btn-primary { background: #1677ff; border-color: #1677ff; color: #fff; }
+    .btn-add { background: #52c41a; border-color: #52c41a; color: #fff; }
+    .btn-boost {
+      background: #f2970d; border-color: #f2970d; color: #fff; font-weight: 600; min-width: 148px;
+      box-shadow: 0 0 0 2px rgba(242,151,13,.25);
+    }
+    .btn-boost.on {
+      background: #f95130; border-color: #f95130;
+      box-shadow: 0 0 0 2px rgba(249,81,48,.28);
+    }
+    .btn-edit { background: #1677ff; border-color: #1677ff; color: #fff; height: 28px; padding: 0 10px; font-size: 12px; }
+    .btn-del { background: #fa8c16; border-color: #fa8c16; color: #fff; height: 28px; padding: 0 10px; font-size: 12px; }
+    .btn-off { background: #ff4d4f; border-color: #ff4d4f; color: #fff; height: 28px; padding: 0 10px; font-size: 12px; }
+    .ops { display: flex; gap: 6px; flex-wrap: nowrap; }
+    .table-wrap { overflow-x: auto; border: 1px solid #f0f0f0; border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 980px; }
+    th, td { border-bottom: 1px solid #f0f0f0; padding: 10px 8px; text-align: left; white-space: nowrap; vertical-align: middle; }
+    th { background: #fafafa; font-weight: 600; color: rgba(0,0,0,.75); }
+    tbody tr:nth-child(even) { background: #f5f9ff; }
+    tbody tr:hover { background: #e6f4ff; }
+    .avatar.ph {
+      width: 36px; height: 36px; border-radius: 4px; background: #f0f0f0;
+      border: 1px solid #e8e8e8; display: inline-flex; align-items: center; justify-content: center;
+      color: #bbb; font-size: 10px;
+    }
+    .tag-on {
+      display: inline-block; padding: 0 8px; height: 22px; line-height: 22px;
+      border-radius: 4px; background: #f6ffed; border: 1px solid #b7eb8f; color: #389e0d; font-size: 12px;
+    }
+    .foot {
+      margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
+      color: rgba(0,0,0,.45); font-size: 12px;
+    }
+    .pager { display: flex; align-items: center; gap: 6px; }
+    .pager button {
+      min-width: 28px; height: 28px; border: 1px solid #d9d9d9; background: #fff; border-radius: 4px; cursor: pointer;
+    }
+    .pager button.active { border-color: #1677ff; color: #1677ff; }
+    .mark { margin-top: 10px; color: #cf1322; font-size: 12px; line-height: 1.55; }
+    .status-line { margin-bottom: 10px; font-size: 12px; color: rgba(0,0,0,.55); }
+    .status-line b { color: #f2970d; }
+    .status-line b.on { color: #f95130; }
+
+    /* Modal */
+    .mask {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45);
+      z-index: 1000; align-items: center; justify-content: center; padding: 16px;
+    }
+    .mask.show { display: flex; }
+    .modal {
+      width: 560px; max-width: 100%; max-height: 90vh; background: #fff; border-radius: 8px;
+      display: flex; flex-direction: column; box-shadow: 0 8px 28px rgba(0,0,0,.18);
+    }
+    .modal-hd {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-weight: 600; font-size: 15px;
+    }
+    .modal-hd .x { border: 0; background: transparent; font-size: 18px; cursor: pointer; color: #999; line-height: 1; }
+    .modal-bd { padding: 16px 20px; overflow-y: auto; flex: 1; }
+    .modal-ft {
+      padding: 12px 16px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 8px;
+    }
+    .form-row {
+      display: grid; grid-template-columns: 100px 1fr; gap: 10px; align-items: start;
+      margin-bottom: 14px;
+    }
+    .form-row > label {
+      text-align: right; color: rgba(0,0,0,.75); padding-top: 6px; line-height: 20px;
+    }
+    .req::before { content: "* "; color: #ff4d4f; }
+    .form-row input[type="text"],
+    .form-row input[type="password"],
+    .form-row input[type="date"],
+    .form-row select,
+    .form-row textarea {
+      width: 100%; min-height: 32px; border: 1px solid #d9d9d9; border-radius: 6px;
+      padding: 4px 10px; font-size: 13px; font-family: inherit;
+    }
+    .form-row textarea { min-height: 72px; resize: vertical; padding: 8px 10px; }
+    .radios { display: flex; flex-wrap: wrap; gap: 14px; padding-top: 6px; }
+    .radios label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    .suffix {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .suffix input { flex: 1; }
+    .suffix span { color: rgba(0,0,0,.45); }
+    .upload {
+      width: 104px; height: 104px; border: 1px dashed #91caff; border-radius: 6px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #1677ff; background: #fafafa; cursor: pointer; gap: 4px; font-size: 12px;
+    }
+    .upload .plus { font-size: 22px; line-height: 1; }
+    .gone-note {
+      margin: 0 0 12px; padding: 8px 10px; background: #fff1f0; border: 1px solid #ffa39e;
+      border-radius: 6px; color: #cf1322; font-size: 12px; line-height: 1.5;
+    }
+    /* 与列表标注同风格：标出「去掉」的虚拟粉丝数字段 */
+    .form-row.kill-field {
+      position: relative;
+      margin: 4px 0 18px;
+      padding: 12px 10px 10px;
+      border: 3px solid #dc143c;
+      border-radius: 4px;
+      background: rgba(220, 20, 60, 0.04);
+    }
+    .form-row.kill-field .kill-tag {
+      position: absolute; top: -12px; left: 8px;
+      background: #dc143c; color: #fff; font-size: 12px; font-weight: 700;
+      padding: 2px 10px; border-radius: 3px; line-height: 1.4;
+    }
+    .form-row.kill-field > label {
+      text-decoration: line-through; color: rgba(0,0,0,.35);
+    }
+    .form-row.kill-field input {
+      text-decoration: line-through; color: rgba(0,0,0,.35);
+      background: #f5f5f5; pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+<script>
+  /* 原型页刷新置顶；文档阅读区另有「保持滚动位置」，二者分开 */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+  window.scrollTo(0, 0)
+</script>
+  <div class="hint">
+    【注意】可切换人气加成；点「新增 / 编辑」看表单红框（去掉虚拟粉丝数）。上方文档三图对照可点放大。非 UI 终稿。
+  </div>
+
+  <div class="tabs">
+    <div class="tab">转账管理</div>
+    <div class="tab">平台游戏维护</div>
+    <div class="tab">游戏类型配置</div>
+    <div class="tab active">主播管理</div>
+  </div>
+
+  <div class="card">
+    <div class="status-line">加成状态：<b id="boostStatus">未开启</b>（仅示意，正式以接口为准）</div>
+    <div class="bar">
+      <label>主播昵称：</label>
+      <input id="nick" placeholder="请输入主播昵称" />
+      <button class="btn btn-primary" type="button" id="btnQuery">查询</button>
+      <button class="btn" type="button" id="btnReset">重置</button>
+      <button class="btn btn-add" type="button" id="btnAdd">新增</button>
+      <button class="btn btn-boost" id="boostBtn" type="button" title="同一按钮两种文案">启动人气值加成</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>主播ID/昵称</th>
+            <th>主播头像</th>
+            <th>直播版面</th>
+            <th>备注</th>
+            <th>创建时间</th>
+            <th>主播热度</th>
+            <th>实际粉丝数</th>
+            <th>粉丝数</th>
+            <th>人气值</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="foot">
+      <div>共 <span id="total">0</span> 条记录 第 1 / 1 页</div>
+      <div class="pager">
+        <button type="button" disabled>&lt;</button>
+        <button type="button" class="active">1</button>
+        <button type="button" disabled>&gt;</button>
+        <select aria-label="每页条数"><option>20条/页</option></select>
+      </div>
+    </div>
+    <p class="mark">相对现网：列表去掉「虚拟粉丝数」列；新增/编辑弹窗用红框标出同名字段（正式实现不展示）。人气值保留可手改。</p>
+  </div>
+
+  <div class="mask" id="mask" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-hd">
+        <span id="modalTitle">新增主播</span>
+        <button type="button" class="x" id="btnClose" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-bd">
+        <div class="gone-note">【重要】与列表红框标注同理：下方红框 = 现网有、本期要去掉的「虚拟粉丝数」。正式上线后该行不渲染。</div>
+
+        <div class="form-row">
+          <label class="req">语言类型:</label>
+          <select><option>简体中文</option></select>
+        </div>
+        <div class="form-row">
+          <label class="req">主播昵称:</label>
+          <input type="text" id="fNick" placeholder="请输入昵称" />
+        </div>
+        <div class="form-row" id="pwdRow">
+          <label class="req">登录密码:</label>
+          <input type="password" placeholder="请输入" />
+        </div>
+        <div class="form-row kill-field" id="virtualFansRow">
+          <span class="kill-tag">② 去掉「虚拟粉丝数」字段</span>
+          <label>虚拟粉丝数:</label>
+          <input type="text" value="1000000000" readonly tabindex="-1" />
+        </div>
+        <div class="form-row">
+          <label class="req">直播版面:</label>
+          <div class="radios">
+            <label><input type="radio" name="layout" checked /> B版</label>
+            <label><input type="radio" name="layout" /> A版</label>
+            <label><input type="radio" name="layout" /> AB版</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>人气值:</label>
+          <input type="text" id="fPop" value="100" placeholder="请输入" />
+        </div>
+        <div class="form-row">
+          <label>生日:</label>
+          <input type="date" />
+        </div>
+        <div class="form-row">
+          <label>家乡:</label>
+          <input type="text" placeholder="请输入" />
+        </div>
+        <div class="form-row">
+          <label>身高:</label>
+          <div class="suffix"><input type="text" placeholder="请输入" /><span>cm</span></div>
+        </div>
+        <div class="form-row">
+          <label>体重:</label>
+          <div class="suffix"><input type="text" placeholder="请输入" /><span>kg</span></div>
+        </div>
+        <div class="form-row">
+          <label>爱好:</label>
+          <input type="text" placeholder="请输入" />
+        </div>
+        <div class="form-row">
+          <label>情感状态:</label>
+          <input type="text" placeholder="请输入" />
+        </div>
+        <div class="form-row">
+          <label>个性签名:</label>
+          <input type="text" placeholder="请输入" />
+        </div>
+        <div class="form-row">
+          <label>68号:</label>
+          <input type="text" placeholder="请输入" />
+        </div>
+        <div class="form-row">
+          <label>备注:</label>
+          <textarea placeholder="请输入"></textarea>
+        </div>
+        <div class="form-row">
+          <label class="req">主播头像:</label>
+          <div class="upload"><span class="plus">+</span><span>上传图片</span></div>
+        </div>
+        <div class="form-row">
+          <label>主播照片:</label>
+          <div class="upload"><span class="plus">+</span><span>上传图片</span></div>
+        </div>
+        <div class="form-row">
+          <label>照片墙:</label>
+          <div class="upload"><span class="plus">+</span><span>上传图片</span></div>
+        </div>
+      </div>
+      <div class="modal-ft">
+        <button type="button" class="btn" id="btnCancel">取消</button>
+        <button type="button" class="btn btn-primary" id="btnOk">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const rows = [
+      { id: '30', name: '30号', layout: 'B版', remark: '—', time: '2025-12-19 18:00:48', heat: 0, real: '—', fans: 0, pop: 100 },
+      { id: '29', name: '888', layout: 'B版', remark: '—', time: '2025-12-19 17:58:26', heat: 0, real: '—', fans: 0, pop: 100 },
+      { id: '28', name: '主播28', layout: 'B版', remark: '—', time: '2025-12-18 11:20:10', heat: 12, real: '—', fans: 12, pop: 200 },
+      { id: '27', name: '测试主播', layout: 'B版', remark: '试播', time: '2025-12-17 09:05:33', heat: 5, real: '—', fans: 5, pop: 1000000000 },
+      { id: '26', name: '直播达人', layout: 'B版', remark: '—', time: '2025-12-16 21:14:02', heat: 0, real: '—', fans: 0, pop: 150 }
+    ]
+
+    const tbody = document.getElementById('tbody')
+    const total = document.getElementById('total')
+    const nick = document.getElementById('nick')
+    const mask = document.getElementById('mask')
+    const modalTitle = document.getElementById('modalTitle')
+    const fNick = document.getElementById('fNick')
+    const fPop = document.getElementById('fPop')
+    const pwdRow = document.getElementById('pwdRow')
+
+    function render(list) {
+      tbody.innerHTML = list.map(r => `
+        <tr>
+          <td>${r.id} ${r.name}</td>
+          <td><span class="avatar ph">头像</span></td>
+          <td>${r.layout}</td>
+          <td>${r.remark}</td>
+          <td>${r.time}</td>
+          <td>${r.heat}</td>
+          <td>${r.real}</td>
+          <td>${r.fans}</td>
+          <td>${r.pop}</td>
+          <td><span class="tag-on">启用</span></td>
+          <td>
+            <div class="ops">
+              <button class="btn btn-edit" type="button" data-id="${r.id}" data-name="${r.name}" data-pop="${r.pop}">编辑</button>
+              <button class="btn btn-del" type="button">删除</button>
+              <button class="btn btn-off" type="button">禁用</button>
+            </div>
+          </td>
+        </tr>
+      `).join('')
+      total.textContent = String(list.length)
+    }
+
+    function openModal(mode, row) {
+      modalTitle.textContent = mode === 'edit' ? '编辑主播' : '新增主播'
+      pwdRow.style.display = mode === 'edit' ? 'none' : 'grid'
+      fNick.value = row ? row.name : ''
+      fPop.value = row ? String(row.pop) : '100'
+      mask.classList.add('show')
+    }
+    function closeModal() {
+      mask.classList.remove('show')
+    }
+
+    document.getElementById('btnQuery').addEventListener('click', () => {
+      const q = (nick.value || '').trim()
+      if (!q) return render(rows)
+      render(rows.filter(r => (r.id + r.name).includes(q)))
+    })
+    document.getElementById('btnReset').addEventListener('click', () => {
+      nick.value = ''
+      render(rows)
+    })
+    document.getElementById('btnAdd').addEventListener('click', () => openModal('add'))
+    document.getElementById('btnClose').addEventListener('click', closeModal)
+    document.getElementById('btnCancel').addEventListener('click', closeModal)
+    document.getElementById('btnOk').addEventListener('click', () => {
+      alert('示意：确认提交（表单无虚拟粉丝数字段）。')
+      closeModal()
+    })
+    mask.addEventListener('click', (e) => { if (e.target === mask) closeModal() })
+
+    const btn = document.getElementById('boostBtn')
+    const boostStatus = document.getElementById('boostStatus')
+    let on = false
+    btn.addEventListener('click', () => {
+      on = !on
+      btn.textContent = on ? '人气值加成启动中' : '启动人气值加成'
+      btn.classList.toggle('on', on)
+      boostStatus.textContent = on ? '人气值加成启动中' : '未开启'
+      boostStatus.classList.toggle('on', on)
+    })
+
+    tbody.addEventListener('click', (e) => {
+      const t = e.target
+      if (!(t instanceof HTMLElement)) return
+      if (t.classList.contains('btn-edit')) {
+        openModal('edit', { name: t.dataset.name, pop: Number(t.dataset.pop || 100) })
+      }
+      if (t.classList.contains('btn-del')) alert('示意：删除确认。')
+      if (t.classList.contains('btn-off')) alert('示意：禁用主播。')
+    })
+
+    render(rows)
+
+    function notifyProtoHeight() {
+      try {
+        let bottom = 0
+        Array.from(document.body.children).forEach((el) => {
+          if (el.id === 'mask' || el.id === 'lb') return
+          const st = window.getComputedStyle(el)
+          if (st.display === 'none' || st.position === 'fixed') return
+          bottom = Math.max(bottom, el.offsetTop + el.offsetHeight)
+        })
+        const h = Math.ceil(bottom + 16)
+        if (h < 80) return
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'veigar-proto-resize', height: h }, '*')
+        }
+      } catch (_) { /* ignore */ }
+    }
+    window.addEventListener('load', notifyProtoHeight)
+    window.addEventListener('resize', notifyProtoHeight)
+    setTimeout(notifyProtoHeight, 80)
+    setTimeout(notifyProtoHeight, 300)
+  </script>
+</body>
+</html>

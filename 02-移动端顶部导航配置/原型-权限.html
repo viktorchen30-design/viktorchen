@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>原型 · 顶部导航配置（权限）</title>
+  <style>
+    :root {
+      --primary: #1677ff;
+      --text: rgba(0,0,0,.88); --text-2: rgba(0,0,0,.65); --text-3: rgba(0,0,0,.45);
+      --border: #f0f0f0; --border-2: #d9d9d9; --bg: #f0f2f5; --sider: #001529;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg); color: var(--text); overflow: hidden; font-size: 13px;
+    }
+    .layout { display: flex; height: 100%; }
+    .sider { width: 216px; flex-shrink: 0; background: var(--sider); color: rgba(255,255,255,.65); overflow-y: auto; }
+    .sider-brand {
+      height: 48px; display: flex; align-items: center; padding: 0 16px; color: #fff; font-weight: 600; font-size: 14px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .menu-item { padding: 9px 16px 9px 28px; line-height: 1.4; font-size: 13px; cursor: pointer; }
+    .menu-item.active { background: var(--primary); color: #fff; }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .header {
+      height: 48px; background: #fff; border-bottom: 1px solid #e8e8e8;
+      display: flex; align-items: center; padding: 0 16px; gap: 12px; flex-shrink: 0;
+    }
+    .header .title { font-size: 14px; color: var(--text-2); }
+    .header .right { margin-left: auto; color: var(--text-2); font-size: 12px; }
+    .switch {
+      display: flex; border: 1px solid var(--border-2); border-radius: 6px; overflow: hidden;
+    }
+    .switch button {
+      height: 28px; padding: 0 14px; border: 0; background: #fff; color: var(--text-2);
+      font-size: 12px; cursor: pointer; font-family: inherit; border-right: 1px solid var(--border-2);
+    }
+    .switch button:last-child { border-right: 0; }
+    .switch button.active { background: var(--primary); color: #fff; }
+    .content { flex: 1; overflow: auto; padding: 12px 16px 24px; position: relative; }
+    .hint {
+      margin-bottom: 12px; padding: 8px 12px; background: #fff7e6; border: 1px solid #ffd591;
+      border-radius: 6px; color: #ad6800; font-size: 12px; line-height: 1.6;
+    }
+    .view { display: none; }
+    .view.on { display: block; }
+
+    /* 岗位权限 */
+    .box { background: #fff; border: 1px solid var(--border); border-radius: 2px; max-width: 880px; }
+    .hd { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 15px; font-weight: 500; }
+    .bd { padding: 16px 20px; }
+    .ft { padding: 10px 16px; text-align: right; border-top: 1px solid var(--border); background: #fafafa; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .pill {
+      height: 28px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--border-2);
+      background: #fff; font-size: 12px; color: var(--text-2); display: inline-flex; align-items: center;
+    }
+    .pill.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .tree-line { padding: 4px 0; display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
+    .tree-line.indent { padding-left: 24px; }
+    .tree-hl {
+      background: #f6ffed; border: 1px dashed #95de64; border-radius: 6px; padding: 8px 10px; margin: 6px 0;
+    }
+
+    /* 系统权限 · 对齐原版弹窗 */
+    .sys-page-title { font-size: 14px; margin-bottom: 10px; color: var(--text); }
+    .sys-bg {
+      background: #fff; border: 1px solid var(--border); border-radius: 2px; padding: 12px;
+      min-height: 680px; position: relative;
+    }
+    .sys-bg table { width: 100%; border-collapse: collapse; font-size: 12px; color: var(--text-2); }
+    .sys-bg th, .sys-bg td { border-bottom: 1px solid var(--border); padding: 10px 8px; text-align: left; }
+    .sys-bg th { background: #fafafa; }
+    .sys-bg .link { color: var(--primary); cursor: pointer; }
+    .mask {
+      position: absolute; inset: 0; background: rgba(0,0,0,.45);
+      display: flex; align-items: stretch; justify-content: center; padding: 12px; z-index: 5;
+    }
+    .modal {
+      width: 680px; max-width: 100%; background: #fff; border-radius: 2px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.15); display: flex; flex-direction: column;
+      height: calc(100% - 4px); min-height: 640px; max-height: 100%;
+    }
+    .modal-hd {
+      padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
+      font-size: 16px; font-weight: 500; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .modal-x { border: 0; background: none; font-size: 18px; cursor: pointer; color: var(--text-3); line-height: 1; }
+    .modal-bd {
+      padding: 12px 20px 8px; overflow: hidden; flex: 1; min-height: 0;
+      display: flex; flex-direction: column;
+    }
+    .modal-ft {
+      padding: 10px 16px; text-align: right; border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+    .form-compact {
+      flex-shrink: 0; margin-bottom: 10px; padding: 8px 10px; background: #fafafa;
+      border: 1px solid var(--border); border-radius: 4px; font-size: 12px; color: var(--text-2); line-height: 1.7;
+    }
+    .form-compact b { color: var(--text); font-weight: 500; }
+    .change-tip {
+      flex-shrink: 0; margin-bottom: 10px; padding: 8px 12px; background: #f6ffed;
+      border: 1px solid #b7eb8f; border-radius: 4px; color: #389e0d; font-size: 13px; line-height: 1.5;
+    }
+    .perm-lab { margin: 0 0 8px; font-size: 14px; flex-shrink: 0; }
+    .perm-scroll {
+      border: 1px solid var(--border-2); border-radius: 2px; flex: 1; min-height: 380px;
+      overflow: auto; padding: 10px 14px;
+    }
+    .perm-scroll label {
+      display: flex; align-items: center; gap: 8px; padding: 8px 6px; font-size: 13px; cursor: pointer;
+    }
+    .perm-scroll label.hl {
+      background: #f6ffed; border: 1px dashed #95de64; border-radius: 4px; padding: 10px 12px; margin: 4px 0;
+      box-shadow: 0 0 0 2px rgba(82,196,26,.12);
+    }
+    .perm-scroll label.hl b { color: #237804; }
+    .perm-scroll .sec {
+      margin: 10px 0 4px; font-size: 12px; color: var(--text-3); font-weight: 600;
+    }
+    .perm-scroll input { accent-color: var(--primary); }
+    .btn {
+      height: 32px; padding: 0 15px; border-radius: 2px; border: 1px solid var(--border-2);
+      background: #fff; cursor: pointer; font-family: inherit; font-size: 14px;
+    }
+    .btn + .btn { margin-left: 8px; }
+    .btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .toast {
+      position: fixed; top: 64px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,.75); color: #fff; padding: 8px 16px; border-radius: 6px;
+      font-size: 13px; z-index: 30; opacity: 0; pointer-events: none; transition: .2s;
+    }
+    .toast.show { opacity: 1; }
+    html.is-embed, html.is-embed body { height: auto; min-height: 860px; overflow: visible; }
+    html.is-embed .layout { min-height: 860px; height: auto; }
+    html.is-embed .content { overflow: visible; }
+    html.is-embed .sys-bg { min-height: 720px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sider">
+      <div class="sider-brand">权限管理</div>
+      <div class="menu-item active" data-go="job">岗位权限</div>
+      <div class="menu-item" data-go="sys">系统权限</div>
+    </aside>
+    <div class="main">
+      <div class="header">
+        <span class="title">子系统导航</span>
+        <div class="switch" id="switch">
+          <button type="button" class="active" data-view="job">岗位权限</button>
+          <button type="button" data-view="sys">系统权限</button>
+        </div>
+        <div class="right">账号: demo　岗位: 系统管理员</div>
+      </div>
+      <div class="content">
+        <div class="hint">
+          <b>本页仅权限</b>。系统权限弹窗默认定位到本期新增勾选「顶部导航配置」（夹在导航排序与底部导航之间）。
+        </div>
+
+        <div class="view on" id="view-job">
+          <div class="box">
+            <div class="hd">岗位权限设置（系统管理员）</div>
+            <div class="bd">
+              <div class="pills">
+                <span class="pill on">全部菜单</span>
+                <span class="pill">营销系统</span>
+                <span class="pill">网站配置</span>
+                <span class="pill">Bsports-Admin</span>
+              </div>
+              <div class="tree-line"><input type="checkbox" checked disabled /> 导航排序配置</div>
+              <div class="tree-hl" id="jobHl">
+                <div class="tree-line"><input type="checkbox" checked /> <b>顶部导航配置</b>（本期新增）</div>
+                <div class="tree-line indent"><input type="checkbox" checked /> 顶部导航配置查询</div>
+                <div class="tree-line indent"><input type="checkbox" checked /> 顶部导航配置修改</div>
+              </div>
+              <div class="tree-line"><input type="checkbox" checked disabled /> 底部导航配置</div>
+              <div class="tree-line indent"><input type="checkbox" checked disabled /> 底部导航配置查询</div>
+              <div class="tree-line indent"><input type="checkbox" checked disabled /> 底部导航配置新增</div>
+              <div class="tree-line indent"><input type="checkbox" checked disabled /> 底部导航配置修改</div>
+              <div class="tree-line indent"><input type="checkbox" checked disabled /> 底部导航配置删除</div>
+              <div class="tree-line"><input type="checkbox" checked disabled /> 直播管理</div>
+            </div>
+            <div class="ft">
+              <button type="button" class="btn">取消</button>
+              <button type="button" class="btn btn-primary" id="jobOk">提交</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="view" id="view-sys">
+          <div class="sys-page-title">系统权限</div>
+          <div class="sys-bg" id="sysBg">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>系统</th><th>操作</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>全部菜单</td><td><span class="link" id="openSysModal">管理系统权限</span></td></tr>
+                <tr><td>2</td><td>营销系统</td><td><span class="link">管理系统权限</span></td></tr>
+              </tbody>
+            </table>
+            <div class="mask" id="sysMask">
+              <div class="modal" role="dialog">
+                <div class="modal-hd">
+                  <span>创建业务系统/管理业务系统</span>
+                  <button type="button" class="modal-x" id="sysClose">×</button>
+                </div>
+                <div class="modal-bd">
+                  <div class="form-compact">
+                    <b>系统基本信息（既有字段，本期不变）</b>：名称 全部菜单／allMenu　｜　描述已填　｜　图标 area-chart
+                  </div>
+                  <div class="change-tip">本期变化：在「导航排序配置」与「底部导航配置」之间新增勾选 <b>顶部导航配置</b>（下方绿框）。</div>
+                  <div class="perm-lab">系统权限:</div>
+                  <div class="perm-scroll" id="permScroll">
+                    <div class="sec">网站配置相关</div>
+                    <label><input type="checkbox" checked disabled /> 动态提示语配置</label>
+                    <label><input type="checkbox" checked disabled /> 导航排序配置</label>
+                    <label class="hl" id="permHl"><input type="checkbox" checked /> <b>顶部导航配置</b>（本期新增）</label>
+                    <label><input type="checkbox" checked disabled /> 底部导航配置</label>
+                    <label><input type="checkbox" checked disabled /> 直播管理</label>
+                    <label><input type="checkbox" disabled /> 广场配置</label>
+                    <div class="sec">其它权限（示意）</div>
+                    <label><input type="checkbox" checked disabled /> 代充返利审核</label>
+                    <label><input type="checkbox" checked disabled /> 金币调整审核</label>
+                    <label><input type="checkbox" checked disabled /> 风控提款抽检</label>
+                    <label><input type="checkbox" checked disabled /> 财务提币审核</label>
+                    <label><input type="checkbox" checked disabled /> 代理活动审核</label>
+                    <label><input type="checkbox" checked disabled /> 高盈利会员审核</label>
+                    <label><input type="checkbox" checked disabled /> 手动福利审核</label>
+                  </div>
+                </div>
+                <div class="modal-ft">
+                  <button type="button" class="btn" id="sysCancel">取消</button>
+                  <button type="button" class="btn btn-primary" id="sysOk">确定</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.classList.add('show');
+      clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 1800);
+    }
+    function focusPermChange() {
+      const hl = document.getElementById('permHl');
+      const sc = document.getElementById('permScroll');
+      if (!hl || !sc) return;
+      // 把绿框顶到可视区靠上，一眼看到本期变化
+      const top = Math.max(0, hl.offsetTop - 12);
+      sc.scrollTop = top;
+      hl.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+    }
+    function openSysModal() {
+      document.getElementById('sysMask').style.display = 'flex';
+      requestAnimationFrame(() => { focusPermChange(); notifyH(); });
+      setTimeout(focusPermChange, 50);
+    }
+    function setView(v) {
+      document.querySelectorAll('.view').forEach((x) => x.classList.remove('on'));
+      document.getElementById('view-' + v).classList.add('on');
+      document.querySelectorAll('#switch button').forEach((b) => b.classList.toggle('active', b.dataset.view === v));
+      document.querySelectorAll('.sider .menu-item').forEach((m) => m.classList.toggle('active', m.getAttribute('data-go') === v));
+      if (v === 'sys') openSysModal();
+      if (v === 'job') {
+        const jh = document.getElementById('jobHl');
+        if (jh) requestAnimationFrame(() => jh.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+      }
+      notifyH();
+    }
+    document.getElementById('switch').onclick = (e) => {
+      const b = e.target.closest('button'); if (!b) return; setView(b.dataset.view);
+    };
+    document.querySelectorAll('.sider .menu-item').forEach((m) => {
+      m.onclick = () => setView(m.getAttribute('data-go'));
+    });
+    document.getElementById('jobOk').onclick = () => toast('岗位权限已提交（示意）');
+    document.getElementById('sysOk').onclick = () => toast('系统权限已保存（示意）');
+    document.getElementById('sysCancel').onclick = () => toast('已取消（示意）');
+    document.getElementById('sysClose').onclick = () => toast('关闭弹窗（示意，原型默认保持打开对照）');
+    document.getElementById('openSysModal').onclick = () => { openSysModal(); toast('已打开管理业务系统弹窗'); };
+    function notifyH() {
+      try {
+        if (!(window.parent && window.parent !== window)) return;
+        const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight, 860);
+        window.parent.postMessage({ type: 'veigar-proto-resize', height: Math.ceil(h + 8) }, '*');
+      } catch (e) {}
+    }
+    try { if (window.parent && window.parent !== window) document.documentElement.classList.add('is-embed'); } catch (e) { document.documentElement.classList.add('is-embed'); }
+    window.addEventListener('load', () => { notifyH(); focusPermChange(); });
+    setTimeout(notifyH, 100); setTimeout(notifyH, 400);
+  </script>
+</body>
+</html>

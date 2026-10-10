@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>原型 · 顶部导航配置（用户端 H5／APP）</title>
+  <style>
+    :root {
+      --text: rgba(0,0,0,.88); --text-2: rgba(0,0,0,.65); --text-3: rgba(0,0,0,.45);
+      --border: #f0f0f0; --border-2: #d9d9d9; --bg: #f5f5f5; --primary: #1677ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg); color: var(--text); font-size: 13px; padding: 14px 12px 28px;
+    }
+    .hint {
+      max-width: 1180px; margin: 0 auto 12px; padding: 8px 12px; background: #e6f4ff; border: 1px solid #91caff;
+      border-radius: 6px; color: #0958d9; font-size: 12px; line-height: 1.6;
+    }
+    .hint code { font-size: 11px; background: #fff; padding: 0 4px; border-radius: 2px; border: 1px solid #91caff; }
+    .bar { max-width: 1180px; margin: 0 auto 14px; }
+    .site-row, .sim-row {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .sim-row {
+      margin-top: 8px; padding: 8px 10px; background: #fafafa; border: 1px dashed #d9d9d9; border-radius: 6px;
+    }
+    .sim-row.hidden { display: none; }
+    .sim-row .lab { font-size: 12px; color: var(--text-3); margin-right: 4px; }
+    .order-note {
+      max-width: 1180px; margin: 0 auto 12px; font-size: 12px; color: var(--text-2); line-height: 1.6;
+      padding: 8px 12px; background: #fff; border: 1px solid var(--border); border-radius: 6px;
+    }
+    .order-note b { color: var(--text); }
+    .order-note code { font-size: 11px; background: #f5f5f5; padding: 0 4px; border-radius: 2px; }
+    .site-tab, .btn {
+      height: 32px; padding: 0 14px; border-radius: 4px; border: 1px solid var(--border-2);
+      background: #fff; cursor: pointer; font-family: inherit; font-size: 13px;
+    }
+    .site-tab.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .cap { text-align: center; font-size: 12px; color: var(--text-3); margin: 8px 0 12px; }
+    .phones { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .phone-col { text-align: center; }
+    .phone-col .lab { font-size: 12px; color: var(--text-3); margin-bottom: 8px; font-weight: 500; }
+    .phone {
+      width: 250px; border-radius: 24px; overflow: hidden; border: 7px solid #2a2a2a; min-height: 460px;
+    }
+    .phone.night { background: #141414; color: #fff; }
+    .phone.day { background: #f7f7f7; color: #222; border-color: #ddd; }
+    .phone-status { height: 26px; display: flex; justify-content: space-between; padding: 6px 12px 0; font-size: 10px; opacity: .7; }
+    .top-nav { display: flex; justify-content: space-around; padding: 8px 4px 10px; }
+    .phone.night .top-nav { background: #1a1a1a; }
+    .phone.day .top-nav { background: #fff; }
+    .top-nav .item { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 48px; cursor: pointer; position: relative; }
+    .top-nav .item img { width: 28px; height: 28px; }
+    .top-nav .item span { font-size: 10px; }
+    .top-nav .item .code {
+      font-size: 8px; line-height: 1; opacity: .55; font-family: ui-monospace, Consolas, monospace;
+    }
+    .phone.night .item span, .phone.night .item .code { color: rgba(255,255,255,.55); }
+    .phone.day .item span, .phone.day .item .code { color: #8c8c8c; }
+    .top-nav .item.on span { color: #ff4d4f; font-weight: 600; }
+    .banner {
+      margin: 0 8px; height: 72px; border-radius: 8px;
+      background: linear-gradient(90deg, #3a1a12, #8a2a1a);
+      display: flex; align-items: center; padding: 0 12px; font-size: 15px; font-weight: 800; color: #ffd15c;
+    }
+    .sub-tabs { display: flex; gap: 10px; padding: 10px 12px 6px; font-size: 12px; }
+    .phone.night .sub-tabs { color: rgba(255,255,255,.5); }
+    .phone.day .sub-tabs { color: #8c8c8c; }
+    .phone.night .sub-tabs b { color: #fff; }
+    .phone.day .sub-tabs b { color: #222; }
+    .sports { display: flex; gap: 12px; padding: 8px 12px 14px; font-size: 11px; opacity: .75; }
+    .bottom-nav {
+      margin-top: auto; display: flex; justify-content: space-around; padding: 8px 0 12px; font-size: 10px;
+    }
+    .phone.night .bottom-nav { background: #1f1f1f; color: rgba(255,255,255,.55); }
+    .phone.day .bottom-nav { background: #fff; color: #8c8c8c; border-top: 1px solid #f0f0f0; }
+    .bottom-nav .on { color: #ff4d4f; }
+    .phone-body { min-height: 420px; display: flex; flex-direction: column; }
+    .block { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; max-width: 1180px; margin: 0 auto 16px; }
+    .pair-gap {
+      width: 1px; align-self: stretch; background: #e8e8e8; margin: 24px 4px 0; flex-shrink: 0;
+    }
+    @media (max-width: 1100px) { .pair-gap { display: none; } }
+    .toast {
+      position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,.75); color: #fff; padding: 8px 16px; border-radius: 6px;
+      font-size: 13px; z-index: 20; opacity: 0; pointer-events: none; transition: .2s;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="hint">
+    <b>本页仅用户端</b>：皮肤按 <code>navItemCode</code>（<code>db</code>／<code>b</code>／<code>game</code>／<code>live</code>／<code>square</code>）绑定。<b>本需求不管调位</b>；下方「顺序」开关仅 <b>模拟</b>既有导航排序，用来验证调位后图仍跟代号、不会对错。选中按代号。中国站第 4 格按有／无直播取 <code>live</code>／<code>square</code>。
+  </div>
+  <div class="bar">
+    <div class="site-row">
+      <button type="button" class="site-tab active" data-site="cn">中国站</button>
+      <button type="button" class="site-tab" data-site="vn">越南站</button>
+      <button type="button" class="site-tab" data-site="intl">国际站</button>
+    </div>
+    <div class="sim-row" id="orderSimRow">
+      <span class="lab">模拟既有导航排序（非本需求功能）：</span>
+      <button type="button" class="btn active" id="btnOrderDbFirst">顺序：DB → B</button>
+      <button type="button" class="btn" id="btnOrderBFirst">顺序：B → DB</button>
+    </div>
+    <div class="sim-row" id="liveSimRow">
+      <span class="lab">中国站 · 第4格账号模拟：</span>
+      <button type="button" class="btn active" id="btnLiveYes">模拟：有直播账号 → live</button>
+      <button type="button" class="btn" id="btnLiveNo">模拟：无直播账号 → square</button>
+    </div>
+  </div>
+  <div class="order-note" id="orderNote"></div>
+
+  <div class="block">
+    <p class="cap">H5／APP 同布局并排 · <b id="stationLab">中国站</b>　｜　图下小字＝业务标识　｜　点顶栏切换选中（按代号）</p>
+    <div class="phones">
+      <div class="phone-col"><div class="lab">H5 · 日间</div>
+        <div class="phone day"><div class="phone-body">
+          <div class="phone-status"><span>9:41</span><span>H5</span></div>
+          <div class="top-nav" id="h5NavDay"></div>
+          <div class="banner">888 限时加赠</div>
+          <div class="sub-tabs"><b>滚球</b><span>今日</span><span>早盘</span><span>串关</span></div>
+          <div class="sports"><span>足球 35</span><span>篮球 18</span></div>
+          <div class="bottom-nav"><div class="on">首页</div><div>充提</div><div>优惠</div><div>注单</div></div>
+        </div></div>
+      </div>
+      <div class="phone-col"><div class="lab">H5 · 夜间</div>
+        <div class="phone night"><div class="phone-body">
+          <div class="phone-status"><span>9:41</span><span>H5</span></div>
+          <div class="top-nav" id="h5NavNight"></div>
+          <div class="banner">888 限时加赠</div>
+          <div class="sub-tabs"><b>滚球</b><span>今日</span><span>早盘</span><span>串关</span></div>
+          <div class="sports"><span>足球 35</span><span>篮球 18</span></div>
+          <div class="bottom-nav"><div class="on">首页</div><div>充提</div><div>优惠</div><div>注单</div></div>
+        </div></div>
+      </div>
+      <div class="pair-gap" aria-hidden="true"></div>
+      <div class="phone-col"><div class="lab">APP · 日间</div>
+        <div class="phone day"><div class="phone-body">
+          <div class="phone-status"><span>9:41</span><span>APP</span></div>
+          <div class="top-nav" id="appNavDay"></div>
+          <div class="banner">888 限时加赠</div>
+          <div class="sub-tabs"><b>滚球</b><span>今日</span><span>早盘</span><span>串关</span></div>
+          <div class="sports"><span>足球 35</span><span>篮球 18</span></div>
+          <div class="bottom-nav"><div class="on">首页</div><div>充提</div><div>优惠</div><div>注单</div></div>
+        </div></div>
+      </div>
+      <div class="phone-col"><div class="lab">APP · 夜间</div>
+        <div class="phone night"><div class="phone-body">
+          <div class="phone-status"><span>9:41</span><span>APP</span></div>
+          <div class="top-nav" id="appNavNight"></div>
+          <div class="banner">888 限时加赠</div>
+          <div class="sub-tabs"><b>滚球</b><span>今日</span><span>早盘</span><span>串关</span></div>
+          <div class="sports"><span>足球 35</span><span>篮球 18</span></div>
+          <div class="bottom-nav"><div class="on">首页</div><div>充提</div><div>优惠</div><div>注单</div></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    const STATION = { cn: '中国站', vn: '越南站', intl: '国际站' };
+    function svgIcon(letter, mode, theme) {
+      const on = { fill: '#E23D3D', text: '#fff', ring: 'none' };
+      const off = theme === 'night' ? { fill: 'none', text: '#d9d9d9', ring: '#d9d9d9' } : { fill: 'none', text: '#8c8c8c', ring: '#8c8c8c' };
+      const s = mode === 'on' ? on : off;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="28" fill="${s.fill}" stroke="${s.ring}" stroke-width="3"/><text x="36" y="44" text-anchor="middle" font-size="18" font-family="Arial Black, Microsoft YaHei" fill="${s.text}">${letter}</text></svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+    function pack(letter) {
+      return {
+        h5DayOff: svgIcon(letter,'off','day'), h5DayOn: svgIcon(letter,'on','day'),
+        h5NightOff: svgIcon(letter,'off','night'), h5NightOn: svgIcon(letter,'on','night'),
+        appDayOff: svgIcon(letter,'off','day'), appDayOn: svgIcon(letter,'on','day'),
+        appNightOff: svgIcon(letter,'off','night'), appNightOn: svgIcon(letter,'on','night')
+      };
+    }
+    function skin(code, name, letter) {
+      return { code, name, letter, ...pack(letter) };
+    }
+    // 皮肤字典：按代号存，不按位置
+    const skins = {
+      cn: {
+        db: skin('db', '场馆B', 'DB'),
+        b: skin('b', '场馆A', 'B'),
+        game: skin('game', '游戏', '游'),
+        live: skin('live', '直播', '播'),
+        square: skin('square', '广场', '广')
+      },
+      vn: {
+        db: skin('db', '场馆B', 'DB'),
+        b: skin('b', '场馆A', 'B'),
+        game: skin('game', '游戏', '游'),
+        live: skin('live', '直播', '播')
+      },
+      intl: {
+        db: skin('db', '场馆B', 'DB'),
+        b: skin('b', '场馆A', 'B'),
+        game: skin('game', '游戏', '游'),
+        live: skin('live', '直播', '播')
+      }
+    };
+    let station = 'cn', selectedCode = 'db', clientHasLive = true, dbBeforeB = true;
+    const $ = (id) => document.getElementById(id);
+    function toast(msg) {
+      const el = $('toast'); el.textContent = msg; el.classList.add('show');
+      clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 1800);
+    }
+    /** 先拿顺序（导航排序），再按代号取皮 */
+    function clientRows() {
+      const dict = skins[station];
+      const head = dbBeforeB ? [dict.db, dict.b] : [dict.b, dict.db];
+      const fourth = station === 'cn'
+        ? (clientHasLive ? dict.live : dict.square)
+        : dict.live;
+      return head.concat([dict.game, fourth]);
+    }
+    function renderNav(elId, onKey, offKey) {
+      const list = clientRows();
+      $(elId).innerHTML = list.map((r) => {
+        const on = r.code === selectedCode;
+        const src = on ? r[onKey] : r[offKey];
+        return `<div class="item ${on?'on':''}" data-code="${r.code}"><img alt="${r.name}" src="${src}" /><span>${r.name}</span><i class="code">${r.code}</i></div>`;
+      }).join('');
+      $(elId).querySelectorAll('.item').forEach((it) => {
+        it.onclick = () => { selectedCode = it.dataset.code; render(); };
+      });
+    }
+    function syncSims() {
+      $('liveSimRow').classList.toggle('hidden', station !== 'cn');
+      $('btnLiveYes').classList.toggle('active', clientHasLive);
+      $('btnLiveNo').classList.toggle('active', !clientHasLive);
+      $('btnOrderDbFirst').classList.toggle('active', dbBeforeB);
+      $('btnOrderBFirst').classList.toggle('active', !dbBeforeB);
+      const orderStr = dbBeforeB ? '<code>db</code> → <code>b</code>' : '<code>b</code> → <code>db</code>';
+      const fourth = station === 'cn'
+        ? (clientHasLive ? '<code>live</code>（有直播）' : '<code>square</code>（无直播）')
+        : '<code>live</code>';
+      $('orderNote').innerHTML = '当前展示顺序：' + orderStr + ' → <code>game</code> → ' + fourth +
+        '　｜　图／名始终跟代号；调换 场馆B／场馆A 后 <b>DB 仍用 db 图、B 仍用 b 图</b>（禁止按下标对图）';
+    }
+    function render() {
+      $('stationLab').textContent = STATION[station];
+      // 若当前选中代号不在本站列表（极少见），回落到第一格
+      const codes = clientRows().map((r) => r.code);
+      if (!codes.includes(selectedCode)) selectedCode = codes[0];
+      syncSims();
+      renderNav('h5NavDay', 'h5DayOn', 'h5DayOff');
+      renderNav('h5NavNight', 'h5NightOn', 'h5NightOff');
+      renderNav('appNavDay', 'appDayOn', 'appDayOff');
+      renderNav('appNavNight', 'appNightOn', 'appNightOff');
+      notifyH();
+    }
+    document.querySelectorAll('.site-tab').forEach((btn) => {
+      btn.onclick = () => {
+        document.querySelectorAll('.site-tab').forEach((x) => x.classList.remove('active'));
+        btn.classList.add('active'); station = btn.dataset.site; selectedCode = 'db'; render();
+        toast('已切换：' + STATION[station]);
+      };
+    });
+    $('btnOrderDbFirst').onclick = () => { dbBeforeB = true; render(); toast('顺序：DB → B（图仍按 db／b）'); };
+    $('btnOrderBFirst').onclick = () => { dbBeforeB = false; render(); toast('顺序：B → DB（图仍按 db／b）'); };
+    $('btnLiveYes').onclick = () => { clientHasLive = true; render(); toast('第4格 → live'); };
+    $('btnLiveNo').onclick = () => { clientHasLive = false; render(); toast('第4格 → square'); };
+    function notifyH() {
+      try {
+        if (!(window.parent && window.parent !== window)) return;
+        const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight, 880);
+        window.parent.postMessage({ type: 'veigar-proto-resize', height: Math.ceil(h + 8) }, '*');
+      } catch (e) {}
+    }
+    window.addEventListener('load', notifyH); setTimeout(notifyH, 100); setTimeout(notifyH, 400);
+    render();
+  </script>
+</body>
+</html>

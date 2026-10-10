@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<!-- AUTO-GENERATED-LOCAL-REQ-INDEX：由 sync-nav.ps1 根据 需求说明.md 生成，请勿手改；改正文请改 需求说明.md 后重新同步 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>【H5／APP】注单TAB页无数据时增加引导原生场馆</title>
+  <style>
+    :root {
+      --primary: #1677ff;
+      --text: rgba(0,0,0,.88);
+      --text-secondary: rgba(0,0,0,.45);
+      --border: #f0f0f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f0f2f5; color: var(--text); min-height: 100vh;
+    }
+    .top {
+      position: sticky; top: 0; z-index: 50;
+      background: #fff; border-bottom: 1px solid var(--border);
+      padding: 10px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .top h1 { font-size: 15px; font-weight: 700; }
+    .badge {
+      font-size: 11px; padding: 1px 7px; border-radius: 4px; font-weight: 600;
+      background: #e6f4ff; color: #0958d9; border: 1px solid #91caff;
+    }
+    .top .hint { color: var(--text-secondary); font-size: 12px; flex: 1; min-width: 180px; }
+    .doc-toc {
+      --doc-toc-width: 280px;
+      position: relative; margin-left: auto; flex-shrink: 0;
+      align-self: stretch; display: flex; align-items: center;
+      width: var(--doc-toc-width);
+    }
+    .doc-toc[hidden] { display: none !important; }
+    .doc-toc-title {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 32px; padding: 0 14px; border-radius: 6px;
+      font-size: 13px; font-weight: 700; line-height: 1; text-align: center;
+      border: 1px solid #91caff; background: #e6f4ff; color: #0958d9; cursor: default;
+      user-select: none; white-space: nowrap;
+    }
+    .doc-toc-panel {
+      display: none; position: absolute; left: 0; right: 0; top: calc(100% - 2px);
+      width: 100%; max-height: min(72vh, 560px); overflow: auto; overscroll-behavior: contain;
+      background: #fff; border: 1px solid var(--border); border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12); padding: 6px 0; z-index: 80;
+    }
+    .doc-toc:hover .doc-toc-panel,
+    .doc-toc:focus-within .doc-toc-panel { display: block; }
+    .doc-toc-panel a {
+      display: block; padding: 8px 14px; font-size: 13px; line-height: 20px; height: 36px;
+      color: var(--text); text-decoration: none;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .doc-toc-panel a.toc-l3 { padding-left: 26px; }
+    .doc-toc-panel a:hover, .doc-toc-panel a.is-active { background: #e6f4ff; color: #0958d9; }
+    .panel-body h2, .panel-body h3 { scroll-margin-top: 56px; }
+    .wrap { padding: 12px 16px 40px; }
+    .panel {
+      background: #fff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .panel-head { padding: 16px 20px; border-bottom: 1px solid var(--border); background: #fafafa; }
+    .panel-head h1 { font-size: 18px; }
+    .panel-body { padding: 16px 20px 28px; font-size: 14px; line-height: 1.7; }
+    .panel-body h1 { font-size: 22px; margin: 8px 0 12px; }
+    .panel-body h2 { font-size: 17px; margin: 22px 0 10px; }
+    .panel-body h3 { font-size: 15px; margin: 16px 0 8px; }
+    .panel-body p, .panel-body ul, .panel-body ol { margin: 0 0 12px; }
+    .panel-body li { margin: 4px 0; }
+    .panel-body table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 13px; }
+    .panel-body th, .panel-body td { border: 1px solid #e8e8e8; padding: 8px 10px; vertical-align: top; }
+    .panel-body th.cell-nowrap,
+    .panel-body td.cell-nowrap {
+      white-space: nowrap;
+      width: 1%;
+      word-break: keep-all;
+    }
+    .panel-body table.kv-table th:first-child,
+    .panel-body table.kv-table td:first-child {
+      white-space: nowrap;
+      width: 1%;
+      word-break: keep-all;
+    }
+    .panel-body th { background: #fafafa; font-weight: 600; }
+    .panel-body pre {
+      margin: 10px 0 16px; padding: 12px 14px; background: #fafafa; border: 1px solid #e8e8e8;
+      border-radius: 4px; overflow: auto; font-size: 13px;
+    }
+    .panel-body code { font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
+    .panel-body p code, .panel-body li code, .panel-body td code {
+      background: #f5f5f5; padding: 1px 4px; border-radius: 3px;
+    }
+    .panel-body hr { border: none; border-top: 1px solid #e8e8e8; margin: 20px 0; }
+    /* 所有图片居中：单图 / 多图（1～N）同一套紧凑逻辑，不按张数换布局 */
+    .doc-figure {
+      margin: 12px auto 18px; padding: 8px; background: #fff; border: 1px solid #e8e8e8;
+      width: fit-content; max-width: min(720px, 100%);
+    }
+    .doc-figure img {
+      display: block; width: auto; max-width: min(720px, 100%); max-height: 360px;
+      margin: 0 auto; cursor: zoom-in; background: #fff; object-fit: contain;
+    }
+    .doc-figure.is-phone {
+      max-width: min(280px, 100%);
+    }
+    .doc-figure.is-phone img {
+      max-width: min(280px, 100%); max-height: none;
+    }
+    .doc-figure .cap, .doc-proto .cap {
+      margin-top: 8px; font-size: 13px; color: var(--text-secondary); text-align: center;
+    }
+    .doc-compare {
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
+      gap: 12px 16px; margin: 12px auto 18px; width: 100%;
+    }
+    .doc-compare .doc-figure {
+      margin: 0; flex: 0 1 auto; width: auto; max-width: min(280px, 100%);
+    }
+    .doc-compare .doc-figure img {
+      width: auto; max-width: 100%; max-height: 280px; margin: 0 auto; object-fit: contain;
+    }
+    .doc-compare .doc-figure.is-phone,
+    .doc-compare .doc-figure.is-phone img {
+      max-width: min(280px, 100%);
+    }
+    .doc-compare { display: none !important; }
+    .doc-figure:has(> img) { display: none !important; }
+    .doc-tabs { margin: 12px 0 18px; }
+    .doc-tab-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .doc-tab-btn {
+      height: 32px; padding: 0 12px; border: 1px solid #d9d9d9; background: #fff;
+      border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--text);
+    }
+    .doc-tab-btn:hover { border-color: #1677ff; color: #1677ff; }
+    .doc-tab-btn.is-on { background: #1677ff; color: #fff; border-color: #1677ff; }
+    .doc-tab-pane { display: none; }
+    .doc-tab-pane.is-on { display: block; }
+    .doc-proto {
+      margin: 12px 0 18px; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; background: #fff;
+    }
+    .doc-proto iframe {
+      display: block; width: 100%; height: 420px; border: 0; background: #fff;
+      overflow: hidden;
+    }
+    .doc-proto .cap {
+      margin: 0; padding: 8px 10px; background: #fafafa; border-top: 1px solid #e8e8e8;
+    }
+    .tag {
+      display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px;
+      font-size: 13px; font-weight: 500; margin: 0 6px 8px 0; border: 1px solid #d9d9d9;
+      background: #fafafa; color: rgba(0,0,0,.65);
+    }
+    .tag-row { margin-bottom: 8px; }
+    .callout {
+      margin: 12px 0 16px; padding: 12px 14px; border-radius: 4px;
+      border: 1px solid #e8e8e8; background: #fafafa; font-size: 13px; line-height: 1.65;
+    }
+    .callout > :last-child { margin-bottom: 0; }
+    .callout-lead { font-weight: 600; font-size: 15px; }
+
+    .panel.theme-veigar { border-color: #d5dde8; max-width: none; }
+    .panel.theme-veigar .panel-head {
+      background: linear-gradient(180deg, #eef3f8 0%, #e4ecf5 100%);
+      border-bottom: 1px solid #d5dde8; color: #243447;
+    }
+    .panel.theme-veigar .panel-body { background: #fbfcfe; color: #2c3a4a; }
+    .panel.theme-veigar .panel-body h2 {
+      margin: 28px 0 12px; padding: 8px 12px; font-size: 17px; font-weight: 700; color: #243447;
+      background: #eaf0f7; border-left: 4px solid #5b7fa6; border-radius: 0 6px 6px 0;
+    }
+    .panel.theme-veigar .panel-body h3 { font-weight: 700; color: #3d5670; }
+    .panel.theme-veigar .panel-body table { border: 1px solid #d5dde8; border-radius: 8px; overflow: hidden; }
+    .panel.theme-veigar .panel-body th.cell-nowrap,
+    .panel.theme-veigar .panel-body td.cell-nowrap,
+    .panel.theme-veigar .panel-body table.kv-table th:first-child,
+    .panel.theme-veigar .panel-body table.kv-table td:first-child {
+      white-space: nowrap;
+      width: 1%;
+      word-break: keep-all;
+    }
+    .panel.theme-veigar .panel-body th, .panel.theme-veigar .panel-body td {
+      border: 1px solid #dce4ee; padding: 10px 12px;
+    }
+    .panel.theme-veigar .panel-body th { background: #5b7fa6; color: #f7fafc; }
+    .panel.theme-veigar .panel-body tr:nth-child(even) td { background: #f5f8fb; }
+    .panel.theme-veigar .tag { border-radius: 999px; font-weight: 600; }
+    .panel.theme-veigar .tag-be { background: #e8f0fa; color: #355d8a; border-color: #c5d6ea; }
+    .panel.theme-veigar .tag-site { background: #eef3f8; color: #4a6078; border-color: #d5dde8; }
+    .panel.theme-veigar .tag-mod { background: #e9f3ef; color: #3d6b5c; border-color: #c5ddd3; }
+    .panel.theme-veigar .tag-pri { background: #f0eef8; color: #5a5280; border-color: #d5d0e8; }
+    .panel.theme-veigar .callout { border-radius: 8px; border-left-width: 4px; }
+    .panel.theme-veigar .callout-lead {
+      background: #e4eef8; border-color: #7aa0c4; border-left-color: #3d6b99; color: #1e3348; font-weight: 600;
+    }
+    .panel.theme-veigar .callout-info {
+      background: #e8f1fa; border-color: #8eb0d0; border-left-color: #4a7ab0; color: #1e3a55;
+    }
+    .panel.theme-veigar .callout-warn {
+      background: #fff6e8; border-color: #e0c08a; border-left-color: #c48a2e; color: #5a4018;
+    }
+    .panel.theme-veigar .callout-ok {
+      background: #e8f6ef; border-color: #8fc4a8; border-left-color: #3d8f6a; color: #1e4d38;
+    }
+    .panel.theme-veigar .callout-danger {
+      background: #fdeeee; border-color: #d99a9a; border-left-color: #c45c5c; color: #5c2a2a;
+    }
+    .panel.theme-veigar .callout-critical {
+      background: #fde8e8; border-color: #d08080; border-left-color: #b83232; color: #5a1f1f; font-weight: 600;
+    }
+    .panel.theme-veigar .callout-key {
+      background: #fff3d6; border-color: #e0b85c; border-left-color: #c4921a; color: #5a4010; font-weight: 600;
+    }
+    .panel.theme-veigar .pri {
+      display: inline-block; padding: 1px 8px; margin-right: 6px; border-radius: 4px;
+      font-size: 12px; font-weight: 700; white-space: nowrap;
+    }
+    .panel.theme-veigar .pri-must-test { background: #c45c5c; color: #fff; }
+    .panel.theme-veigar .pri-must-accept { background: #3d6b99; color: #fff; }
+    .panel.theme-veigar .pri-note { background: #c48a2e; color: #fff; }
+    .panel.theme-veigar .pri-important { background: #6b5b95; color: #fff; }
+    .panel.theme-veigar .panel-body strong {
+      color: #8a4b12; background: linear-gradient(180deg, transparent 55%, #ffe6b8 55%); font-weight: 700;
+    }
+    .panel.theme-veigar .panel-body mark.hl { background: #ffe08a; color: #4a3508; padding: 1px 6px; border-radius: 3px; }
+
+    .img-lightbox {
+      position: fixed; inset: 0; z-index: 9999; display: none; align-items: center; justify-content: center;
+      padding: 24px; background: rgba(15, 23, 42, 0.78); cursor: zoom-out; overflow: hidden;
+    }
+    .img-lightbox.is-open { display: flex; }
+    .img-lightbox img {
+      max-width: min(96vw, 1600px); max-height: 92vh; object-fit: contain; background: #fff;
+      border-radius: 6px; cursor: grab; transform-origin: center center; will-change: transform;
+      user-select: none; -webkit-user-drag: none;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+    .img-lightbox.is-dragging img { cursor: grabbing; }
+    .img-lightbox .lb-hint {
+      position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,.85); font-size: 13px; pointer-events: none; white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <span class="badge">本地入口</span>
+    <h1>【H5／APP】注单TAB页无数据时增加引导原生场馆</h1>
+    <div class="hint">与根目录总览同一篇 <code>需求说明.md</code> · 同步于 2026-10-09 16:44:43</div>
+    <aside class="doc-toc" id="docToc" hidden>
+      <div class="doc-toc-title">目录</div>
+      <nav class="doc-toc-panel" id="docTocPanel" aria-label="本文目录"></nav>
+    </aside>
+  </div>
+  <div class="wrap">
+    <div class="panel theme-veigar" id="panel">
+      <div class="panel-head"><h1>【H5／APP】注单TAB页无数据时增加引导原生场馆</h1></div>
+      <div class="panel-body" id="body">加载中…</div>
+    </div>
+  </div>
+  <script>
+    window.DOC_PAGE = {"title":"【H5／APP】注单TAB页无数据时增加引导原生场馆","text":"# 【H5/APP】注单TAB页无数据时增加引导原生场馆\r\n\r\n\u003cspan class=\"tag tag-fe\"\u003eH5\u003c/span\u003e\r\n\u003cspan class=\"tag tag-be\"\u003eAPP\u003c/span\u003e\r\n\u003cspan class=\"tag tag-site\"\u003e三站\u003c/span\u003e\r\n\u003cspan class=\"tag tag-site\"\u003e中国站\u003c/span\u003e\r\n\u003cspan class=\"tag tag-site\"\u003e越南站\u003c/span\u003e\r\n\u003cspan class=\"tag tag-site\"\u003e国际站\u003c/span\u003e\r\n\u003cspan class=\"tag tag-mod\"\u003e注单 · 空状态\u003c/span\u003e\r\n\u003cspan class=\"tag tag-pri\"\u003e三语文案 · 立即投注 · 首页顶栏进馆路由\u003c/span\u003e\r\n\r\n:::lead\r\nH5／APP「注单」页面当前在所选 TAB 没有注单数据时，仅展示空状态，用户缺少下一步操作入口。本期在 **场馆A／场馆B注单无数据空状态** 替换三语文案，并增加 **「立即投注 / Bet Now / Cược ngay」** 按钮；点击后按注单页当前选中的 **场馆A／场馆B**，走 **首页顶栏进馆路由** 进入对应原生场馆页。  \r\n**【重要】无后台配置、与「顶部 icon 可配置」需求无关联。**只改 场馆A／场馆B 的无数据空状态；有注单时维持现有展示逻辑，不增加额外引导。范围为 **H5／APP · 中国站／越南站／国际站**。  \r\n**【重要】本需求在 UI 改版之后再开启。** 正文逻辑先定；当前附图／原型基于 **改版前旧 UI**，仅表达空状态文案与按钮关系。改版后会 **重新上传原图**，并 **按新图重做原型**；开发／验收以改版后原图 + 更新后的原型为准。  \r\n**【重要】「立即投注」跳的是原生场馆页**，路由与 **首页顶栏 场馆A／场馆B 进入原生场馆** 同一套；**不是**注单页顶部用来切换「看哪边注单」的 场馆A／场馆B Tab。  \r\n**【重要】未登录进不了注单页**：点底部导航「注单」（及其他进注单入口）走现网 **登录弹层**；**登录成功后进入主页面（首页）**，不会直接落在注单。要看注单须 **再次点击** 底栏「注单」。本期空状态与「立即投注」仅在 **已登录且已进入注单页** 后出现。\r\n:::\r\n\r\n:::info\r\n**一句话**：场馆A／场馆B 注单 TAB 有数据照旧；无数据时替换为新三语空状态并增加「立即投注」，点击走首页顶栏进馆路由进入当前选中馆的原生场馆页。未登录／踢登录成功后均回主页面。\r\n:::\r\n\r\n## 业务阅读指引（【重要】）\r\n\r\n| 读者 | 怎么读 | 看到哪停 |\r\n| --- | --- | --- |\r\n| **业务** | 只看「业务速览」 | 速览末尾「业务读到此处即可停」 |\r\n| **研发／测试** | 从「研发／测试详版」起阅读全文 | 规则、异常与验收均需覆盖 |\r\n\r\n## 业务速览（业务需关注 · 约 2 分钟）\r\n\r\n### 用大白话说\r\n\r\n用户进入「注单」后，如果当前 TAB 没有记录，现在只能看到空状态，页面没有可继续操作的方向。\r\n\r\n本期替换空状态文案并增加 **「立即投注」** 按钮。用户点击后，当前选中 场馆A就进入 **场馆A原生场馆页**，当前选中 场馆B就进入 **场馆B原生场馆页**（与首页顶栏进馆同一路由，不是切注单 Tab）。\r\n\r\n:::ok\r\n**你可以这样理解：**\r\n\r\n- **现在**：注单 TAB 无数据 → 只看到空状态，下一步要自己找场馆。\r\n- **改完后**：注单 TAB 无数据 → 显示「暂无数据／前往查看精彩赛事」及「立即投注」按钮。\r\n- **点击按钮**：跳到当前选中馆的 **原生场馆页**（与 **首页顶栏** 场馆A／场馆B 进馆同一路由）。**不是**再点注单页顶部 场馆A／场馆B（那是切注单列表，人还在注单页）。\r\n- **有注单时不变**：正常展示注单列表，不显示空状态引导。\r\n- **只做引导，不自动跳转**：用户主动点击后才离开注单页。\r\n- **APP 自己跳**：APP 不复用 H5 页面，由客户端按首页顶栏进馆同一套自行跳转。\r\n- **只涉及 场馆A／场馆B**：其他游戏没有本需求所述的注单无数据界面；**顶部切到「游戏」维持现网空状态，不做本期引导、不出「立即投注」**。\r\n- **无后台配置**：前端直接按当前顶部选中项跳转；与「顶部 icon 可配置」需求无关联。**本期无 BE、无新接口、无埋点。**\r\n- **未登录进不了注单页**：点底栏「注单」等入口会弹出 **要求登录**；**登录成功后进主页面（首页）**，不会直接进注单。要进注单须再点一次底栏「注单」。因此「立即投注」只给已登录且已在注单页的用户看。\r\n- **页内登录失效**：踢登录；重新登录后同样进 **主页面**，不会留在注单、也不会自动点「立即投注」。\r\n- **所有进注单入口同一套**：底栏、投注成功进注单、我的、推送／深链等，只要落在 场馆A／场馆B 且该 TAB 无数据，都走本期空状态。\r\n- **场馆限制不拦本次跳转**：H5／APP 原生场馆正常展示；进入后用户真正下注时，再按既有限制逻辑判断并给出对应结果。\r\n- **三站三语**：中国站中文、国际站英文、越南站越南文。\r\n- **H5／APP 都要覆盖**。\r\n- **排期**：等 **UI 改版完成后再开**；下面附图是旧版，改版后换图并重调原型。\r\n:::\r\n\r\n### 改造前 → 改造后\r\n\r\n| 场景 | 改造前 | 改造后 |\r\n| --- | --- | --- |\r\n| 当前 场馆A／场馆B 注单 TAB 无数据 | 旧空状态文案 | **替换**为新三语文案 +「立即投注」 |\r\n| 当前注单 TAB 有数据 | 展示注单列表 | **保持不变** |\r\n| 点击引导 | 无入口 | 进当前选中馆的 **原生场馆页**（＝首页顶栏 场馆A／场馆B 进馆，不是切注单 Tab） |\r\n| 未登录点底栏注单 | 登录弹层 | **登录成功进主页面**；再点注单才进注单页 |\r\n| 是否自动离开注单页 | 否 | 否；仅点击按钮后跳转 |\r\n\r\n:::ok\r\n**业务读到此处即可停。**  \r\n想看完成后效果 → 打开下方「参考界面／原型」。\r\n:::\r\n\r\n---\r\n\r\n## 研发／测试详版（业务可跳过）\r\n\r\n## 基本信息\r\n\r\n| 项 | 内容 |\r\n| --- | --- |\r\n| 需求名称 | 【H5/APP】注单TAB页无数据时增加引导原生场馆 |\r\n| 端 | H5、APP |\r\n| 站点 | **中国站、越南站、国际站** |\r\n| 模块 | 注单 · TAB 空状态 |\r\n| 入口 | 底部导航 → 注单；**以及现网所有进入注单页的入口**（投注成功、我的、深链／推送等），规则同一套 |\r\n| 覆盖 TAB | 未结算、已结算、预约投注；各 TAB 独立按自身数据判断 |\r\n| 场馆范围 | **仅顶部选中 场馆A／场馆B**；顶部为「游戏」时维持现网，本期不改 |\r\n| 后端 | **无**（无新接口、无后台配置） |\r\n| APP 跳转 | **客户端自行跳转**，不复用 H5 页面；目标与首页顶栏进馆一致 |\r\n| 负责人 | veigar |\r\n| 协作 | H5、客户端、UI、测试 |\r\n| 状态 | 待排期／草稿（**等 UI 改版后再开**） |\r\n| 发布时间 | 待确认（不早于注单页 UI 改版） |\r\n| 附图说明 | 当前为 **改版前旧 UI**；改版后重传原图、重调原型 |\r\n\r\n## 交付物\r\n\r\n| 页／文件 | 用途 |\r\n| --- | --- |\r\n| [需求说明.md](./需求说明.md) | 需求正文 |\r\n| [原型.html](./原型.html) | 空状态文案／按钮示意（**叠在旧 UI 原图上**；改版后按新图重调） |\r\n| [现状-场馆A-注单空态.png](./现状-场馆A-注单空态.png) | 场馆A注单无数据 · **改版前旧 UI**（待替换） |\r\n| [现状-场馆B-注单空态.png](./现状-场馆B-注单空态.png) | 场馆B注单无数据 · **改版前旧 UI**（待替换） |\r\n| [index.html](./index.html) | 本地需求入口（同步生成） |\r\n\r\n## 参考界面（现状 · 改版前旧 UI）\r\n\r\n:::warn\r\n**【注意】下列原图为改版前旧 UI**，只用来对位置：空状态在哪、顶部 场馆A／场馆B 在哪。  \r\n本需求 **等注单页 UI 改版后再开启**。改版完成后：**重新上传原图**，并 **按新图重做／重调原型**。研发与验收不以旧图视觉为准，以改版后原图 + 更新后的原型 + 本期文案／跳转规则为准。\r\n:::\r\n\r\n:::compare\r\n![场馆A · 注单无数据现状（旧 UI）](./现状-场馆A-注单空态.png)\r\n![场馆B · 注单无数据现状（旧 UI）](./现状-场馆B-注单空态.png)\r\n:::\r\n\r\n### 完成后效果示意（叠在旧图上 · 待改版后重调）\r\n\r\n![注单无数据 · 原生场馆引导交互原型](./原型.html)\r\n\r\n:::warn\r\n原型只表达：新三语文案替换旧文案 +「立即投注」+ 进对应原生场馆页。跳转走首页顶栏进馆，不是切注单 Tab。  \r\n间距、字号、按钮尺寸、整页皮肤以 **UI 改版设计稿** 为准；新原图到位后会重调本原型。\r\n:::\r\n\r\n## 背景与目标\r\n\r\n### 现状\r\n\r\n1. 用户进入注单页面后，按 TAB 查看对应注单。\r\n2. 当前 TAB 返回空数据时，页面仅展示既有空状态。\r\n3. 空状态没有直接前往体育场馆的入口，用户需要自行切换页面寻找赛事。\r\n\r\n### 目标\r\n\r\n1. 给无注单用户一个清晰、可操作的下一步。\r\n2. 缩短从「无注单」到「浏览赛事／投注」的路径。\r\n3. 不影响已有注单用户查看记录、切换 TAB 与执行原有操作。\r\n\r\n## 改造范围\r\n\r\n| 项 | 是否在本期 | 说明 |\r\n| --- | --- | --- |\r\n| H5 注单 TAB 无数据空状态 | 是 | 增加三语文案与「立即投注」 |\r\n| APP 注单 TAB 无数据空状态 | 是 | 与 H5 规则一致；**客户端自行跳转**，不复用 H5 页 |\r\n| 未结算／已结算／预约投注 | 是 | 每个 TAB 独立判断有无数据 |\r\n| 所有进入注单页的入口 | 是 | 规则同一套，不限底栏 |\r\n| 有数据注单列表 | 否 | 保持改造前 |\r\n| 场馆A／场馆B | 是 | 按顶部当前选中项展示及跳转；打开注单时默认馆 **跟现网顶部默认选中一致** |\r\n| 顶部「游戏」 | 否 | **维持现网空状态与交互，本期不做任何调整** |\r\n| 其他游戏 | 否 | 没有本需求所述的注单无数据界面 |\r\n| 注单查询／分页／筛选逻辑 | 否 | 不因本期调整；无额外筛选项空态 |\r\n| 投注流程与场馆页面 | 否 | 本期只增加跳转入口 |\r\n| 后端／新接口／后台配置 | 否 | **本期无 BE** |\r\n| 未登录 | 沿用现网 | 点底栏「注单」等入口弹出登录；**登录成功进主页面**，不会直接进注单。再点「注单」才进注单页。本期不在「立即投注」上再做登录 |\r\n| 三方场馆 | 否 | 本期按钮只引导至原生场馆 |\r\n| PC | 否 | 本需求不含 PC |\r\n| 埋点 | 否 | **本期无埋点**（不新增曝光／点击／目标场馆事件） |\r\n\r\n## 核心规则\r\n\r\n| # | 规则 | 说明 |\r\n| --- | --- | --- |\r\n| 1 | 展示条件 | **当前场馆 + 当前 TAB** 的注单列表接口 **成功返回空数组（0 条）** 时，展示空状态文案与按钮；与页上「总计 0 单」应对齐。本期无额外筛选空态 |\r\n| 2 | 有数据不展示 | 当前 TAB 有任意注单时，仅展示既有注单列表，不显示本期引导 |\r\n| 3 | 各 TAB 独立判断 | 切换 TAB 后，以新 TAB 自身的数据结果重新判断 |\r\n| 3b | 所有进注单入口 | 底栏／投注成功／我的／深链／推送等，只要落在 场馆A／场馆B 且该 TAB 无数据，均走本期空状态 |\r\n| 4 | 用户主动跳转 | 不自动跳场馆；仅点击「立即投注」后跳转 |\r\n| 5 | 按当前选中馆跳原生场馆 | 注单页顶部当前选中 场馆A → 进 **场馆A原生场馆页**；选中 场馆B → 进 **场馆B原生场馆页**。由前端直接判断，无后台配置 |\r\n| 5b | 【重要】场馆上下文一致 | 停留在哪个场馆，空状态判断、按钮展示、跳转目标就必须是哪个场馆。注单页顶部选中项、当前 TAB 数据结果、跳转目标三者必须同一场馆；旧请求不得覆盖新场馆 |\r\n| 5c | 【重要】进馆路由 ≠ 注单 Tab | 点击「立即投注」＝走 **首页顶栏 场馆A／场馆B 进入原生场馆** 的既有路由与落点。**禁止**做成再点注单页顶部 场馆A／场馆B（那只切换注单列表，人仍在注单页） |\r\n| 5f | APP 跳转 | **客户端自行跳转**，不复用 H5 页面；目标与该端首页顶栏 场馆A／场馆B 进馆一致 |\r\n| 5d | 打开注单时的默认馆 | **与现网注单页顶部默认选中一致**；按钮只认打开后顶部 **实际选中项**，本期不另定默认馆 |\r\n| 5e | 顶部「游戏」 | **维持现网**，不出本期文案与「立即投注」 |\r\n| 6 | 不改查询逻辑 | 不修改注单接口、筛选条件、状态分类与列表出数 |\r\n| 6b | 无后端 | **本期无 BE、无新接口、无后台配置** |\r\n| 6c | 无埋点 | **本期不新增任何埋点**（空状态曝光、按钮点击、跳转目标场馆均不做） |\r\n| 7 | 加载不等于空数据 | 请求未结束时展示既有加载态，不提前展示空状态引导；**请求完整成功返回 0 条后才出按钮** |\r\n| 7b | 切场馆先清旧空态 | 顶部 场馆A／场馆B 切换后、新场馆数据未返回前：展示加载态；**不得沿用上一场馆的空状态与按钮** |\r\n| 8 | 失败不等于空数据 | 接口失败沿用既有失败／重试表现，不误判为空数据 |\r\n| 10 | 三站文案 | 按站点固定：中国站中文、国际站英文、越南站越南文，按下表定稿展示 |\r\n| 11 | 空状态图跟改版走 | **插图／空状态视觉以 UI 改版设计为准**；本期只 **替换标题／说明并加按钮**，不沿用改版前旧图标另画一套 |\r\n| 12 | 其他页面元素 | 总计、公告、顶部导航、底部导航及其他既有元素均保持现状 |\r\n| 13 | 场馆限制 | 已登录点击允许正常进入对应原生场馆；进入后发生下注时，才按既有场馆限制逻辑判断并提示 |\r\n| 13b | 未登录 | 点底栏「注单」等入口 → 现网登录弹层。**登录成功进入主页面（首页）**，不直接进注单；须再点底栏「注单」才进注单页。未登录看不到本期空状态，点不到「立即投注」 |\r\n| 13c | 页内登录失效 | **踢登录**；重新登录后进入 **主页面**，不留在注单、不自动跳原生场馆、不自动触发「立即投注」 |\r\n| 14 | 防重复点击 | 点击「立即投注」后按技术常规防重复触发（建议 **3～5 秒**，以研发既有标准为准），避免连点叠开多层同一场馆 |\r\n| 15 | 跳转失败 | 复用 **首页顶栏进馆** 既有失败处理；**不做持续轮询自动再跳**（见「弱网／接口异常」） |\r\n| 16 | APP 灰度 | **无新接口**。APP 由客户端自行跳转，须发版。灰度期内 **旧包维持改造前空状态（无「立即投注」）**，新包走本期；旧包不崩、不脏数据 |\r\n\r\n## 交互流程\r\n\r\n```text\r\n进入注单页／切换 TAB／切换顶部 B·DB\r\n        ↓\r\n以「当前场馆 + 当前 TAB」为上下文请求注单\r\n        ↓\r\n┌─ 加载中／切场馆未返回：展示既有加载态（清掉上一场馆空态与按钮）\r\n├─ 请求失败：展示既有失败／重试\r\n├─ 有数据：展示既有注单列表，不加引导\r\n└─ 本场馆本 TAB 请求完整成功且 0 条：空状态文案 +「立即投注」\r\n                         ↓ 用户点击（防重复 3～5 秒）\r\n             走首页顶栏 场馆A／场馆B 进馆路由 → 对应原生场馆页\r\n             （不是切注单页顶部 Tab）\r\n```\r\n\r\n## 空状态文案（定稿）\r\n\r\n| 站点／语言 | 标题 | 引导说明 | 按钮 |\r\n| --- | --- | --- | --- |\r\n| 中国站／中文 | **暂无数据** | **前往查看精彩赛事** | **立即投注** |\r\n| 国际站／English | **No Data Yet** | **Explore More Events** | **Bet Now** |\r\n| 越南站／Tiếng Việt | **Chưa có dữ liệu** | **Xem thêm các trận đấu hấp dẫn** | **Cược ngay** |\r\n\r\n## 跳转逻辑\r\n\r\n| 场景 | 处理 |\r\n| --- | --- |\r\n| 有注单数据 | 维持现有注单页面展示逻辑，不显示按钮 |\r\n| 场馆A／场馆B 无注单数据 | 空状态插图跟 UI 改版走；替换标题／说明，增加「立即投注」按钮 |\r\n| 顶部当前选中 场馆A | 点击后进入 **场馆A原生场馆页**（＝首页顶栏进 B 馆，**不是**切注单 Tab） |\r\n| 顶部当前选中 场馆B | 点击后进入 **场馆B原生场馆页**（＝首页顶栏进 DB 馆，**不是**切注单 Tab） |\r\n| 其他游戏 | 不涉及本期无数据引导 |\r\n| 顶部切到「游戏」 | **维持现网空状态与交互**，去掉／不展示本期「立即投注」 |\r\n| 未登录点进注单 | 登录弹层；**登录成功进主页面**；再点注单才进注单页 |\r\n| 已登录点「立即投注」 | 直接进对应原生场馆页（不再弹登录）。H5 走 H5 进馆；APP 由客户端自行跳转 |\r\n| 页内登录失效 | 踢登录；重新登录后进 **主页面** |\r\n| 账号存在场馆限制 | 已登录时本按钮仍允许进入原生场馆；用户进入后下注时，再按既有限制逻辑判断并给出对应结果 |\r\n| 连续点击按钮 | 防重复触发（3～5 秒或技术常规），不叠开多层 |\r\n| 跳转失败 | 走 **首页顶栏进馆** 既有失败处理；有限次即时重试可由技术按惯例做，**不做轮询自动再跳** |\r\n\r\n:::key\r\n【重要】页面只有一个「立即投注」按钮，**不读取后台配置**。认注单页顶部当前选中：`B → 场馆A原生场馆页`，`DB → 场馆B原生场馆页`。  \r\n**【重要】停留在哪个场馆，跳转就必须是哪个场馆。** 空状态判断、顶部选中项、跳转目标必须同一场馆上下文。  \r\n**【重要】进馆 ≠ 切注单 Tab。** 按钮走 **首页顶栏 场馆A／场馆B 进原生场馆** 的路由，不要做成再点注单页顶部 场馆A／场馆B。  \r\n该按钮与「顶部 icon 可配置」需求无关联。\r\n:::\r\n\r\n## 弱网／接口异常\r\n\r\n拆成两段，**不要用持续轮询兜底**。\r\n\r\n### A. 注单数据还没出来（按钮还没出现）\r\n\r\n网速慢、接口慢，属于「这次请求还没结束」，不是跳转失败。\r\n\r\n| 情况 | 怎么处理 |\r\n| --- | --- |\r\n| 接口慢、弱网还在转 | **只出既有加载态**；等 **当前场馆 + 当前 TAB 这一次请求** 完整结束。不另开轮询、不提前出「立即投注」 |\r\n| 接口超时／失败 | **走注单页既有失败／重试**（用户点重试再拉一次）。失败 ≠ 无数据，**不出空状态按钮** |\r\n| 请求成功且 0 条 | 这时才替换文案并出「立即投注」 |\r\n| 请求成功且有数据 | 只出列表，本期不动 |\r\n\r\n### B. 已经点了「立即投注」，进场馆慢或失败\r\n\r\n按钮复用 **首页顶栏 场馆A／场馆B 进馆** 路由，**弱网表现与点首页顶栏进馆保持一致**。\r\n\r\n| 情况 | 怎么处理 |\r\n| --- | --- |\r\n| 跳转过程慢（转圈／白屏） | 沿用首页顶栏进馆既有等待；按钮进入防重复（3～5 秒或技术常规），避免连点叠页 |\r\n| 跳转失败／超时／路由打不开 | **人留在注单页**；失败提示与点 **首页顶栏 场馆A／场馆B 进馆** 失败 **同一套**（有 Toast 就同一句，现网没提示则本期也不新造文案） |\r\n| 用户要再试 | **再点一次按钮**（防重复结束后）。不后台自动再跳 |\r\n| 技术瞬时重试 | **允许**：点击当次内部按惯例重试 1～2 次（跟首页顶栏进馆实现对齐即可） |\r\n| 定时轮询直到跳成功 | **不做** |\r\n\r\n:::ok\r\n**产品一句话**：网慢就等这一次；失败就按现网失败／重试，人还在注单页，要再进场馆就再点按钮。不要偷偷轮询把人拉走。\r\n:::\r\n\r\n## 异常与边界\r\n\r\n| 场景 | 预期 |\r\n| --- | --- |\r\n| 首次进入仍在加载 | 不展示空状态引导 |\r\n| 接口超时／失败 | 展示既有失败或重试，不展示无数据引导 |\r\n| 当前 TAB 无数据、其他 TAB 有数据 | 当前 TAB 显示引导；切到有数据 TAB 正常展示列表 |\r\n| 快速切换 TAB | 以后一次有效请求对应的 **当前场馆 + 当前 TAB** 为准，避免空态串页 |\r\n| 快速切换顶部 场馆A／场馆B | 立刻进入加载态并清掉上一场馆空态／按钮；仅新场馆请求完整成功且 0 条后，才出对应按钮 |\r\n| 旧请求晚到 | **丢弃**；不得用 B 的空结果在已选中 DB 的页面出按钮（反之亦然） |\r\n| 点击时场馆维护 | 进入行为沿用 **首页顶栏进馆** 的既有维护机制 |\r\n| 用户受到场馆限制 | 已登录允许进入原生场馆；下注时再按既有限制逻辑判断并提示 |\r\n| 未登录点底栏「注单」（及其他进注单入口） | 现网登录弹层；**登录成功进主页面**；须再点「注单」才进注单页；看不到本期空状态 |\r\n| 页内登录失效后点「立即投注」或被踢 | 踢登录；重新登录后进 **主页面**，不留在注单、不自动进场馆 |\r\n| 已登录点「立即投注」 | 走首页顶栏进馆路由，直接进对应原生场馆页，不再弹登录 |\r\n| 顶部切到「游戏」 | 现网空状态，无本期按钮 |\r\n| 非底栏入口进入注单 | 与底栏进入同一套空状态规则 |\r\n| 快速切换顶部 场馆A／场馆B 后点击 | 以点击按钮当下顶部实际选中项为准，避免跳到切换前场馆 |\r\n| 连续点击「立即投注」 | 防重复（3～5 秒或技术常规），只触发一次跳转 |\r\n| APP 灰度旧包 | 无新接口、不崩；旧包维持改造前空状态（无本期按钮）；新包客户端自行跳转 |\r\n| 跳转失败 | 首页顶栏进馆既有失败处理；可有限次即时重试；不轮询自动再跳 |\r\n\r\n## 影响范围\r\n\r\n| 模块 | 影响 |\r\n| --- | --- |\r\n| H5 注单页 | 新增三语空状态引导；H5 走首页顶栏进馆路由 |\r\n| APP 注单页 | 新增同等空状态引导；**客户端自行跳转**，不复用 H5 页 |\r\n| 原生场馆 | 作为跳转目标；场馆功能本身不改 |\r\n| 前端跳转 | H5／APP 各读本端当前选中 场馆A／场馆B，调 **本端首页顶栏进馆**；APP 由客户端自跳、不复用 H5；禁止做成切注单 Tab |\r\n| 后端 | **本期不改** |\r\n| 埋点 | **本期不改、不新增** |\r\n| UI | 空状态插图跟改版设计；本期只换标题／说明并加按钮 |\r\n\r\n## 验收标准\r\n\r\n- [ ] H5、APP 当前注单 TAB 无数据时，展示空状态引导与按钮\r\n- [ ] 中国站正确展示「暂无数据／前往查看精彩赛事／立即投注」\r\n- [ ] 国际站正确展示「No Data Yet／Explore More Events／Bet Now」\r\n- [ ] 越南站正确展示「Chưa có dữ liệu／Xem thêm các trận đấu hấp dẫn／Cược ngay」\r\n- [ ] 当前 TAB 有数据时不显示引导，原注单列表与操作不受影响\r\n- [ ] 未结算、已结算、预约投注各自按自身数据独立判断\r\n- [ ] 加载中不提前显示空状态引导\r\n- [ ] 接口失败不误显示为空数据\r\n- [ ] 顶部选中 场馆A时，点击按钮进入 场馆A **原生场馆页**（首页顶栏进 B 馆路由，不是切注单 Tab）\r\n- [ ] 顶部选中 场馆B时，点击按钮进入 场馆B **原生场馆页**（首页顶栏进 DB 馆路由，不是切注单 Tab）\r\n- [ ] 空状态、顶部选中项、跳转目标始终同一场馆；旧请求不得覆盖新场馆\r\n- [ ] 仅当「当前场馆 + 当前 TAB」请求完整成功且 0 条才出按钮\r\n- [ ] 切换 场馆A／场馆B 未返回前只出加载态，不沿用上一场馆空态按钮\r\n- [ ] 前端直接按顶部选中项判断，不依赖后台配置\r\n- [ ] 既有空状态视觉跟 UI 改版；旧标题／说明被新文案替换，不重复显示\r\n- [ ] 总计、公告、顶部导航、底部导航及其他既有元素保持现状\r\n- [ ] 顶部为「游戏」时维持现网，不出现本期「立即投注」\r\n- [ ] 非底栏入口进入注单，场馆A／场馆B 无数据时同样出本期空状态\r\n- [ ] 未登录点底栏「注单」等入口弹出登录；**登录成功进主页面**；再点注单才进注单页；看不到本期空状态\r\n- [ ] 页内登录失效：踢登录，重新登录后进主页面，不留在注单、不自动进场馆\r\n- [ ] 已登录点「立即投注」直接进对应原生场馆页，不再二次登录\r\n- [ ] 打开注单时默认馆与现网顶部选中一致\r\n- [ ] 无新接口、无后台配置、**无新增埋点**\r\n- [ ] 其他游戏不新增本期空状态引导\r\n- [ ] 未点击时停留在注单页，不自动跳转；跳转失败不轮询自动再跳\r\n- [ ] 连点按钮按 3～5 秒或技术常规防重复，不叠开多层\r\n- [ ] 受限账号可由按钮正常进入原生场馆；下注时才触发既有限制判断\r\n- [ ] APP 由客户端自行跳转，不复用 H5 页；目标与该端首页顶栏进馆一致\r\n- [ ] APP 灰度：无新接口；旧包不崩、维持改造前空状态；新包走本期\r\n\r\n## 测试范围\r\n\r\n| 用例 | 操作 | 预期 |\r\n| --- | --- | --- |\r\n| TC-01 | H5 进入无数据 TAB | 展示空状态与「立即投注」 |\r\n| TC-02 | APP 进入无数据 TAB | 展示空状态与「立即投注」；点击由客户端自行跳进对应原生场馆 |\r\n| TC-03 | 进入有数据 TAB | 仅展示既有注单列表 |\r\n| TC-04 | 无数据 TAB → 有数据 TAB | 空态消失，列表正常 |\r\n| TC-05 | 有数据 TAB → 无数据 TAB | 列表消失，展示对应空态引导 |\r\n| TC-06 | 弱网加载 | 加载结束前不闪无数据引导 |\r\n| TC-07 | 注单接口失败 | 走既有失败／重试，不显示无数据引导 |\r\n| TC-08 | 中国站无数据 | 中文标题、说明、按钮与定稿一致 |\r\n| TC-09 | 国际站无数据 | 英文标题、说明、按钮与定稿一致 |\r\n| TC-10 | 越南站无数据 | 越南文标题、说明、按钮与定稿一致 |\r\n| TC-11 | 顶部选中 场馆A后点击 | 跳至 场馆A **原生场馆页**（首页顶栏进馆）；仍停在注单页＝失败 |\r\n| TC-12 | 顶部选中 场馆B后点击 | 跳至 场馆B **原生场馆页**（首页顶栏进馆）；仍停在注单页＝失败 |\r\n| TC-13 | 顶部 场馆A／场馆B 快速切换后点击 | 按点击当下实际选中项进对应原生场馆，不使用切换前状态 |\r\n| TC-13b | B 切 DB，B 的空数据请求后到 | 页面已是 DB：不展示 B 的空态按钮；等 DB 请求完整后再判 |\r\n| TC-13c | 切场馆数据未回 | 仅加载态；上一场馆「立即投注」已消失 |\r\n| TC-15 | 账号被限制时点击按钮 | 正常进入原生场馆；后续下注才按既有逻辑提示 |\r\n| TC-16 | 核对原页面 | 空状态图、总计、公告、顶部／底部导航保持现状；旧文案不重复 |\r\n| TC-17 | 进入其他游戏／顶部切到游戏 | 不出现本期空状态引导，维持现网 |\r\n| TC-17b | 投注成功／我的／深链进入注单且 场馆A／场馆B 无数据 | 与底栏进入同一套空状态与按钮 |\r\n| TC-17c | 未登录点底栏「注单」 | 登录弹层；**登录成功进主页面**；未自动进注单；无本期空状态 |\r\n| TC-17c2 | 已登录后进注单无数据再点「立即投注」 | 直接进对应原生场馆页，不再弹登录 |\r\n| TC-17c3 | 注单页内登录失效 | 踢登录；重新登录后进主页面，不留在注单、不自动进场馆 |\r\n| TC-17d | 打开注单默认馆 | 与现网顶部默认选中一致 |\r\n| TC-18 | 3 秒内连点按钮 | 只跳一次，不叠开多层同一场馆 |\r\n| TC-19 | 跳转失败／弱网点按钮 | 人留在注单页；失败表现与点首页顶栏进馆一致；不自动轮询再跳 |\r\n| TC-20 | 注单接口慢 | 只出加载态，不提前出「立即投注」 |\r\n| TC-21 | 注单接口失败后再点重试成功且 0 条 | 这时才出空状态与按钮 |\r\n| TC-22 | APP 灰度旧包 | 不崩、不脏数据；仍为改造前空状态，无本期按钮 |\r\n\r\n## 风险评估\r\n\r\n| 风险 | 影响 | 应对 |\r\n| --- | --- | --- |\r\n| 做成切注单 Tab | 点按钮人还在注单页 | 必须走首页顶栏进原生场馆路由 |\r\n| 切场馆沿用旧空态 | 画面已是 DB，按钮仍按 B 的空结果可点 | 切场馆先清空态；请求完整成功才出按钮 |\r\n| 加载态误判为空态 | 页面先闪引导再出列表 | 等接口成功返回空集合后再展示 |\r\n| 连点叠开多层 | 同一场馆打开多次 | 防重复 3～5 秒或技术常规 |\r\n| 跳转失败轮询自动再跳 | 用户已停在注单却被突然拉走 | 复用首页顶栏进馆失败处理；禁止持续轮询 |\r\n| APP 与 H5 路由不一致 | 某端跳转失败 | 各端分别复用 **本端** 首页顶栏进馆；APP 不复用 H5 页；提测前两端对一下 |\r\n| 多语言换行或溢出 | 越南文展示不完整 | UI 按最长越南文走查并做小屏适配 |\r\n\r\n## 待确认／待补\r\n\r\n**【前提，不另开规则】** 默认 **UI 改版后注单页仍保留顶部 场馆A／场馆B／游戏切换**。若改版拿掉 场馆A／场馆B，「当前选中馆」失去锚点，跳转规则需重开。\r\n\r\n1. **UI 改版完成后**：重传 场馆A／场馆B 注单无数据原图，并按新图重调原型（当前附图为旧 UI）；空状态插图以改版设计为准。\r\n2. 发布时间（不早于注单页 UI 改版）。  \r\n以上两项 **后续补齐**，不阻塞当前逻辑定稿。\r\n\r\n## 修订记录\r\n\r\n| 日期 | 版本 | 说明 |\r\n| --- | --- | --- |\r\n| 2026-09-03 | v0.12 | 明确本期无埋点（不新增曝光／点击／目标场馆事件） |\r\n| 2026-09-03 | v0.11 | 忽略场馆返回栈（场馆页无返回按钮）；APP 确定由客户端自行跳转、不复用 H5；灰度＝旧包无按钮、新包自跳 |\r\n| 2026-09-03 | v0.10 | 曾写进馆返回必须回注单；APP 灰度默认。v0.11 已按「无返回按钮」删掉返回栈要求 |\r\n| 2026-09-03 | v0.9 | 立即投注＝首页顶栏进原生场馆路由（禁止做成切注单 Tab）；未登录／踢登录成功后均进主页面，须再点注单才进注单页；待补项标明后续补齐 |\r\n| 2026-09-03 | v0.8 | 纠正未登录：拦在进注单入口（底栏「注单」等弹登录），进不了注单页；「立即投注」仅已登录可见，点击直接进场馆、不再二次登录；顺带去掉「保留旧空状态图」旧表述 |\r\n| 2026-09-03 | v0.7 | 收口：游戏 Tab 维持现网；所有进注单入口同一套；未登录点按钮出登录提示；0 条＝列表接口成功空数组；默认馆跟现网顶部选中；无 BE；空状态图跟 UI 改版走 |\r\n| 2026-09-03 | v0.6 | 注明：本需求等 UI 改版后再开；当前原图／原型为旧 UI；改版后重传原图并重调原型 |\r\n| 2026-09-03 | v0.5 | 第 6 条落成弱网／接口两段：数据未回只等本次请求；点按钮后失败留在注单、跟顶部入口一致，再进靠再点；禁止轮询自动跳 |\r\n| 2026-09-03 | v0.4 | 补边界：场馆上下文一致；按钮＝点顶部入口；请求完整才出按钮；切场馆清旧空态；防重复 3～5 秒；跳转失败复用顶部入口、不做持续轮询 |\r\n| 2026-09-03 | v0.3 | 明确无后台配置；按顶部当前选中 场馆A／场馆B 前端直跳对应原生场馆；仅 场馆A／场馆B 生效；新文案替换旧文案；按站点固定语言；受限账号可进场馆、下注时再判断；其余页面元素保持现状 |\r\n| 2026-09-03 | v0.2 | 明确 H5／APP 三站范围；补中／英／越定稿文案；按钮按当前业务配置跳对应原生场馆；归档 场馆A／场馆B 现状图并增加可交互原型 |\r\n| 2026-09-03 | v0.1 | 新建需求草稿：注单 TAB 无数据时增加原生场馆引导；补业务速览、核心规则、异常、验收与待确认项 |"};
+  </script>
+  <script>
+    (function () {
+      function escapeHtml(text) {
+        return String(text)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+      }
+      function inlineFormat(text) {
+        const priMap = { 必测: 'must-test', 必验: 'must-accept', 注意: 'note', 重要: 'important' }
+        return escapeHtml(text)
+          .replace(/【(必测|必验|注意|重要)】/g, (_, label) =>
+            '<span class="pri pri-' + priMap[label] + '">' + label + '</span>')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/==(.+?)==/g, '<mark class="hl">$1</mark>')
+          .replace(/`(.+?)`/g, '<code>$1</code>')
+      }
+      function isPhoneShot(alt, srcPath) {
+        const s = String(alt || '') + ' ' + String(srcPath || '')
+        return /H5|手机|iPhone|iphone|phone|移动端|APP端|竖屏/i.test(s)
+      }
+      function renderMarkdownImage(alt, srcPath, assetBase) {
+        const base = assetBase ? assetBase.replace(/\\/g, '/').replace(/\/?$/, '/') : ''
+        if (!/^(https?:|data:)/i.test(srcPath) && !srcPath.startsWith('./') && !srcPath.startsWith('/')) {
+          srcPath = base + srcPath
+        } else if (srcPath.startsWith('./')) {
+          const rest = srcPath.slice(2)
+          const baseNoDot = base.replace(/^\.\//, '')
+          srcPath = (baseNoDot && rest.startsWith(baseNoDot)) ? './' + rest : base + rest
+        }
+        if (/\.html?$/i.test(srcPath) || /^data:text\/html/i.test(srcPath)) {
+          return (
+            '<figure class="doc-proto"><iframe src="' + escapeHtml(srcPath) +
+            '" title="' + escapeHtml(alt || '交互原型') +
+            '" loading="lazy" scrolling="no" data-proto-frame="1"></iframe><figcaption class="cap">' +
+            escapeHtml(alt || '交互原型') + '（本页内可直接操作）</figcaption></figure>'
+          )
+        }
+        const phoneClass = isPhoneShot(alt, srcPath) ? ' is-phone' : ''
+        return (
+          '<figure class="doc-figure' + phoneClass + '"><img src="' + escapeHtml(srcPath) +
+          '" alt="' + escapeHtml(alt) +
+          '" loading="lazy" data-lightbox="1" title="点击放大查看" /><figcaption class="cap">' +
+          escapeHtml(alt || '示意图') + '（点击可放大）</figcaption></figure>'
+        )
+      }
+      function renderCompareBlock(body, assetBase) {
+        const imgs = []
+        const re = /!\[([^\]]*)\]\(([^)]+)\)/g
+        let m
+        while ((m = re.exec(body))) imgs.push(renderMarkdownImage(m[1], m[2].trim(), assetBase))
+        if (!imgs.length) return renderMarkdown(body.trim(), assetBase)
+        return imgs.join('')
+      }
+      function renderTabsBlock(body, assetBase) {
+        const parts = String(body || '').trim().split(/^#{3,4}\s+/m).filter(Boolean)
+        if (!parts.length) return ''
+        const panes = parts.map((part) => {
+          const nl = part.indexOf('\n')
+          const title = (nl === -1 ? part : part.slice(0, nl)).trim()
+          const rest = nl === -1 ? '' : part.slice(nl + 1)
+          const imgs = renderCompareBlock(rest, assetBase)
+          return { title, html: imgs ? '<div class="doc-compare">' + imgs + '</div>' : '' }
+        })
+        let bar = '<div class="doc-tab-bar" role="tablist">'
+        let panesHtml = ''
+        panes.forEach((p, i) => {
+          const on = i === 0 ? ' is-on' : ''
+          bar += '<button type="button" class="doc-tab-btn' + on + '" data-tab="' + i + '">' +
+            escapeHtml(p.title) + '</button>'
+          panesHtml += '<div class="doc-tab-pane' + on + '" data-pane="' + i + '">' + p.html + '</div>'
+        })
+        bar += '</div>'
+        return '<div class="doc-tabs">' + bar + panesHtml + '</div>'
+      }
+      function renderMarkdown(src, assetBase) {
+        let text = String(src || '').replace(/\r\n/g, '\n')
+        const calloutStore = []
+        const base = assetBase ? assetBase.replace(/\\/g, '/').replace(/\/?$/, '/') : ''
+        text = text.replace(/:::(\w+)\s*\n([\s\S]*?)\n:::/g, (_, type, body) => {
+          const idx = calloutStore.length
+          if (type === 'compare') {
+            calloutStore.push({ type: 'compare', html: renderCompareBlock(body, assetBase) })
+          } else if (type === 'tabs') {
+            calloutStore.push({ type: 'tabs', html: renderTabsBlock(body, assetBase) })
+          } else {
+            calloutStore.push({ type, html: renderMarkdown(body.trim(), assetBase) })
+          }
+          return '\n\n%%CALLOUT_' + idx + '%%\n\n'
+        })
+        const blocks = text.split(/\n{2,}/)
+        const html = []
+        for (let block of blocks) {
+          block = block.trim()
+          if (!block) continue
+          const calloutRef = block.match(/^%%CALLOUT_(\d+)%%$/)
+          if (calloutRef) {
+            const item = calloutStore[Number(calloutRef[1])]
+            if (item.type === 'compare') html.push('<div class="doc-compare">' + item.html + '</div>')
+            else if (item.type === 'tabs') html.push(item.html)
+            else html.push('<div class="callout callout-' + item.type + '">' + item.html + '</div>')
+            continue
+          }
+          if (/^```/.test(block)) {
+            const lines = block.split('\n')
+            const code = lines.slice(1, lines[lines.length - 1] === '```' ? -1 : undefined).join('\n')
+            html.push('<pre><code>' + escapeHtml(code) + '</code></pre>')
+            continue
+          }
+          if (block.startsWith('# ')) { html.push('<h1>' + inlineFormat(block.slice(2)) + '</h1>'); continue }
+          if (block.startsWith('## ')) { html.push('<h2>' + inlineFormat(block.slice(3)) + '</h2>'); continue }
+          if (block.startsWith('### ')) { html.push('<h3>' + inlineFormat(block.slice(4)) + '</h3>'); continue }
+          if (/^\|/.test(block) && block.includes('\n|')) {
+            const rows = block.split('\n').filter((l) => /^\|/.test(l) && !/^\|\s*-+/.test(l))
+            if (rows.length) {
+              const parseRow = (row) =>
+                row.replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim())
+              const head = parseRow(rows[0])
+              const isKv = head.length === 2 && head[0] === '项' && /^(内容|说明)$/.test(head[1])
+              const nowrapCol = head.map((c) => /^(编号|#|日期|版本)$/.test(c))
+              let table = '<table' + (isKv ? ' class="kv-table"' : '') + '><thead><tr>'
+              head.forEach((c, i) => {
+                table += '<th' + (nowrapCol[i] ? ' class="cell-nowrap"' : '') + '>' + inlineFormat(c) + '</th>'
+              })
+              table += '</tr></thead><tbody>'
+              rows.slice(1).forEach((row) => {
+                table += '<tr>'
+                parseRow(row).forEach((c, i) => {
+                  table += '<td' + (nowrapCol[i] ? ' class="cell-nowrap"' : '') + '>' + inlineFormat(c) + '</td>'
+                })
+                table += '</tr>'
+              })
+              table += '</tbody></table>'
+              html.push(table)
+              continue
+            }
+          }
+          if (/^(- |\d+\. )/.test(block)) {
+            const lines = block.split('\n')
+            const ordered = /^\d+\. /.test(lines[0])
+            const tag = ordered ? 'ol' : 'ul'
+            const items = lines
+              .map((line) => line.replace(/^(- |\d+\. )/, ''))
+              .map((line) => '<li>' + inlineFormat(line) + '</li>')
+              .join('')
+            html.push('<' + tag + '>' + items + '</' + tag + '>')
+            continue
+          }
+          if (block === '---') { html.push('<hr />'); continue }
+          const linkMatch = block.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+          if (linkMatch) {
+            let href = linkMatch[2].trim()
+            if (!/^(https?:|data:)/i.test(href) && !href.startsWith('./') && !href.startsWith('/')) href = base + href
+            else if (href.startsWith('./')) {
+              const rest = href.slice(2)
+              const baseNoDot = base.replace(/^\.\//, '')
+              href = (baseNoDot && rest.startsWith(baseNoDot)) ? './' + rest : base + rest
+            }
+            html.push(
+              '<p><a href="' + escapeHtml(href) + '" target="_blank" rel="noopener">' +
+              escapeHtml(linkMatch[1]) + '</a></p>'
+            )
+            continue
+          }
+          const imgLines = block.split('\n').map((l) => l.trim()).filter(Boolean)
+          if (imgLines.length && imgLines.every((line) => /^!\[([^\]]*)\]\(([^)]+)\)$/.test(line))) {
+            html.push(imgLines.map((line) => {
+              const m = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
+              return renderMarkdownImage(m[1], m[2].trim(), assetBase)
+            }).join('\n'))
+            continue
+          }
+          if (/<span class="tag/.test(block)) {
+            const tags = block.replace(
+              /<span class="tag([^"]*)">([\s\S]*?)<\/span>/g,
+              (_, cls, label) => '<span class="tag' + cls + '">' + escapeHtml(label.trim()) + '</span>'
+            )
+            html.push('<div class="tag-row">' + tags.replace(/\n/g, ' ') + '</div>')
+            continue
+          }
+          html.push(
+            '<p>' + block.split('\n').map((line) => inlineFormat(line)).join('<br>') + '</p>'
+          )
+        }
+        return html.join('\n')
+      }
+      function ensureLightbox() {
+        let lb = document.getElementById('img-lightbox')
+        if (lb) return lb
+        lb = document.createElement('div')
+        lb.id = 'img-lightbox'
+        lb.className = 'img-lightbox'
+        lb.innerHTML =
+          '<img alt="" /><div class="lb-hint">滚轮持续放大/缩小 · 拖拽移动 · 点空白或 Esc 关闭</div>'
+        document.body.appendChild(lb)
+        const lbImg = lb.querySelector('img')
+        let scale = 1
+        let tx = 0
+        let ty = 0
+        let dragging = false
+        let lastX = 0
+        let lastY = 0
+
+        function applyTransform() {
+          lbImg.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')'
+        }
+        function resetView() {
+          scale = 1
+          tx = 0
+          ty = 0
+          dragging = false
+          lb.classList.remove('is-dragging')
+          applyTransform()
+        }
+        const close = () => {
+          lb.classList.remove('is-open')
+          resetView()
+        }
+        lb.addEventListener('click', (e) => {
+          if (e.target === lb || e.target.classList.contains('lb-hint')) close()
+        })
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && lb.classList.contains('is-open')) close()
+        })
+        lb.addEventListener(
+          'wheel',
+          (e) => {
+            if (!lb.classList.contains('is-open')) return
+            e.preventDefault()
+            const rect = lbImg.getBoundingClientRect()
+            const ox = (e.clientX - (rect.left + rect.width / 2)) / scale
+            const oy = (e.clientY - (rect.top + rect.height / 2)) / scale
+            const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12
+            const next = Math.min(8, Math.max(0.5, scale * factor))
+            if (next === scale) return
+            tx += ox * (scale - next)
+            ty += oy * (scale - next)
+            scale = next
+            applyTransform()
+          },
+          { passive: false },
+        )
+        lbImg.addEventListener('pointerdown', (e) => {
+          if (!lb.classList.contains('is-open') || e.button !== 0) return
+          dragging = true
+          lastX = e.clientX
+          lastY = e.clientY
+          lb.classList.add('is-dragging')
+          try { lbImg.setPointerCapture(e.pointerId) } catch (_) {}
+          e.preventDefault()
+        })
+        lbImg.addEventListener('pointermove', (e) => {
+          if (!dragging) return
+          tx += e.clientX - lastX
+          ty += e.clientY - lastY
+          lastX = e.clientX
+          lastY = e.clientY
+          applyTransform()
+        })
+        const endDrag = (e) => {
+          if (!dragging) return
+          dragging = false
+          lb.classList.remove('is-dragging')
+          try { lbImg.releasePointerCapture(e.pointerId) } catch (_) {}
+        }
+        lbImg.addEventListener('pointerup', endDrag)
+        lbImg.addEventListener('pointercancel', endDrag)
+        lbImg.addEventListener('click', (e) => e.stopPropagation())
+        lb._resetView = resetView
+        return lb
+      }
+      function markPhoneFigures(root) {
+        root.querySelectorAll('.doc-figure:not(.is-phone) img[data-lightbox]').forEach((img) => {
+          const apply = () => {
+            if (!img.naturalWidth) return
+            // 竖屏（高明显大于宽）按手机尺寸收窄
+            if (img.naturalHeight > img.naturalWidth * 1.15) {
+              const fig = img.closest('.doc-figure')
+              if (fig && !fig.closest('.doc-compare')) fig.classList.add('is-phone')
+            }
+          }
+          if (img.complete) apply()
+          else img.addEventListener('load', apply)
+        })
+      }
+      function bindProtoFrameResize(root) {
+        window.addEventListener('message', (e) => {
+          const data = e && e.data
+          if (!data || data.type !== 'veigar-proto-resize') return
+          const h = Number(data.height)
+          if (!h || h < 100) return
+          root.querySelectorAll('iframe[data-proto-frame]').forEach((frame) => {
+            try {
+              if (frame.contentWindow === e.source) {
+                frame.style.height = Math.ceil(h) + 'px'
+              }
+            } catch (_) { /* ignore */ }
+          })
+        })
+      }
+      function bindDocImageLightbox(root) {
+        const lb = ensureLightbox()
+        const lbImg = lb.querySelector('img')
+        root.querySelectorAll('img[data-lightbox]').forEach((img) => {
+          img.addEventListener('click', () => {
+            if (typeof lb._resetView === 'function') lb._resetView()
+            lbImg.src = img.currentSrc || img.src
+            lbImg.alt = img.alt || ''
+            lb.classList.add('is-open')
+          })
+        })
+        markPhoneFigures(root)
+        bindProtoFrameResize(root)
+        bindDocTabs(root)
+      }
+      function bindDocTabs(root) {
+        root.querySelectorAll('.doc-tabs').forEach((wrap) => {
+          wrap.querySelectorAll('.doc-tab-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              const i = btn.getAttribute('data-tab')
+              wrap.querySelectorAll('.doc-tab-btn').forEach((b) => b.classList.toggle('is-on', b === btn))
+              wrap.querySelectorAll('.doc-tab-pane').forEach((p) => p.classList.toggle('is-on', p.getAttribute('data-pane') === i))
+            })
+          })
+        })
+      }
+      function mountDocToc(root) {
+        const box = document.getElementById('docToc')
+        const panel = document.getElementById('docTocPanel')
+        if (!box || !panel) return
+        const used = Object.create(null)
+        const items = []
+        root.querySelectorAll('h2, h3').forEach((el) => {
+          const text = String(el.textContent || '').replace(/\s+/g, ' ').trim()
+          if (!text) return
+          let base = 'sec-' + text.replace(/\s+/g, '-').replace(/[^\w\u4e00-\u9fff\-]/g, '')
+          if (base === 'sec-') base = 'sec'
+          let id = base
+          let n = 2
+          while (used[id]) { id = base + '-' + n; n++ }
+          used[id] = true
+          el.id = id
+          items.push({ id: id, text: text, level: el.tagName === 'H3' ? 3 : 2 })
+        })
+        if (!items.length) {
+          box.hidden = true
+          panel.innerHTML = ''
+          return
+        }
+        box.hidden = false
+        panel.innerHTML = items.map(function (it) {
+          return '<a class="toc-l' + it.level + '" href="#' + it.id + '" title="' + escapeHtml(it.text) + '">' + escapeHtml(it.text) + '</a>'
+        }).join('')
+        const links = panel.querySelectorAll('a')
+        links.forEach(function (a) {
+          a.addEventListener('click', function (e) {
+            e.preventDefault()
+            const target = document.getElementById(a.getAttribute('href').slice(1))
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          })
+        })
+        function syncActive() {
+          let current = items[0] && items[0].id
+          items.forEach(function (it) {
+            const el = document.getElementById(it.id)
+            if (el && el.getBoundingClientRect().top <= 72) current = it.id
+          })
+          links.forEach(function (a) {
+            a.classList.toggle('is-active', a.getAttribute('href') === '#' + current)
+          })
+        }
+        window.addEventListener('scroll', syncActive, { passive: true })
+        syncActive()
+      }
+
+      // 文档刷新：停留在刚才阅读位置（不置顶）。原型.html 单独打开时自行置顶，与文档分开。
+      const DOC_SCROLL_KEY = 'bty-local-doc-scroll:' + location.pathname
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+      let savedScroll = 0
+      try { savedScroll = Number(sessionStorage.getItem(DOC_SCROLL_KEY) || 0) || 0 } catch (_) {}
+      function saveDocScroll() {
+        try { sessionStorage.setItem(DOC_SCROLL_KEY, String(window.scrollY || 0)) } catch (_) {}
+      }
+      function restoreDocScroll() {
+        const y = Math.max(0, savedScroll)
+        const apply = () => window.scrollTo(0, y)
+        apply()
+        requestAnimationFrame(apply)
+        setTimeout(apply, 80)
+        setTimeout(apply, 320)
+      }
+      let scrollTimer = null
+      window.addEventListener('scroll', () => {
+        if (scrollTimer) clearTimeout(scrollTimer)
+        scrollTimer = setTimeout(saveDocScroll, 120)
+      }, { passive: true })
+      window.addEventListener('beforeunload', saveDocScroll)
+
+      const page = window.DOC_PAGE || {}
+      const bodyEl = document.getElementById('body')
+      bodyEl.innerHTML = renderMarkdown(page.text || '', './')
+      bindDocImageLightbox(bodyEl)
+      mountDocToc(bodyEl)
+      restoreDocScroll()
+    })()
+  </script>
+</body>
+</html>

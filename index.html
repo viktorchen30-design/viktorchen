@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <script src="./gate.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viktor · 产品作品集</title>
+  <style>
+    :root {
+      --ink: #16324f;
+      --navy: #1f4e79;
+      --gold: #c4a35a;
+      --text: #2c3542;
+      --mute: #5b6573;
+      --line: #d5e2ee;
+      --paper: #f7f9fb;
+      --card: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: var(--paper);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .bar {
+      height: 6px;
+      background: var(--navy);
+    }
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      color: var(--ink);
+    }
+    header .sub {
+      margin: 8px 0 0;
+      color: var(--navy);
+      font-weight: 600;
+    }
+    header .meta {
+      margin: 8px 0 0;
+      color: var(--mute);
+      font-size: 14px;
+    }
+    .note {
+      margin: 18px 0 8px;
+      padding: 12px 14px;
+      background: #eef4fa;
+      border-left: 3px solid var(--gold);
+      color: var(--ink);
+      font-size: 14px;
+    }
+    h2 {
+      margin: 28px 0 12px;
+      font-size: 16px;
+      color: var(--navy);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 6px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 16px 18px 14px;
+      margin-bottom: 12px;
+    }
+    .card h3 {
+      margin: 0 0 4px;
+      font-size: 17px;
+      color: var(--ink);
+    }
+    .card .tag {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--navy);
+      background: #eef4fa;
+      padding: 1px 8px;
+      margin-right: 6px;
+      font-weight: 600;
+    }
+    .card p {
+      margin: 8px 0 12px;
+      font-size: 14px;
+    }
+    .links a {
+      display: inline-block;
+      margin: 0 10px 8px 0;
+      color: #fff;
+      background: var(--navy);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 12px;
+    }
+    .links a.ghost {
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid var(--navy);
+    }
+    footer {
+      margin-top: 28px;
+      color: var(--mute);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="bar"></div>
+  <div class="wrap">
+    <header>
+      <h1>Viktor</h1>
+      <div class="sub">产品作品集 · 脱敏预览</div>
+      <div class="meta">C 端产品经理｜直播 / 导航 / 空态转化 / 登录验证 / 竞品调研</div>
+    </header>
+
+    <p class="note">这是本地预览页。点按钮打开交互原型或需求说明。现网界面对照图已不收录。</p>
+
+    <h2>作品</h2>
+
+    <article class="card">
+      <span class="tag">01</span><span class="tag">直播</span>
+      <h3>直播人气值优化</h3>
+      <p>直播间人气展示，以及后台主播管理：人气加成开关、去掉虚拟粉丝数。对应简历里的体育直播经历。</p>
+      <div class="links">
+        <a href="./01-直播人气值优化/原型.html">打开原型</a>
+        <a class="ghost" href="./01-直播人气值优化/index.html">阅读需求</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <span class="tag">02</span><span class="tag">C 端导航</span>
+      <h3>移动端顶部导航配置</h3>
+      <p>首页顶栏 icon / 名称改为后台可配置，分端、分日夜、分站点。适合讲信息架构和配置化。</p>
+      <div class="links">
+        <a href="./02-移动端顶部导航配置/原型-用户端.html">用户端原型</a>
+        <a href="./02-移动端顶部导航配置/原型-配置.html">后台配置原型</a>
+        <a class="ghost" href="./02-移动端顶部导航配置/index.html">阅读需求</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <span class="tag">03</span><span class="tag">空态 / 转化</span>
+      <h3>注单空态引导</h3>
+      <p>注单无数据时补文案和行动按钮，引导进入对应场馆。短路径，面试里 2 分钟能讲完。</p>
+      <div class="links">
+        <a href="./03-注单空态引导/原型.html">打开原型</a>
+        <a class="ghost" href="./03-注单空态引导/index.html">阅读需求</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <span class="tag">04</span><span class="tag">登录 / 短信</span>
+      <h3>登录短信二次验证</h3>
+      <p>异常设备二次验证：像本人时少重复发码，不像本人仍要验。先看流程图，再读业务速览。</p>
+      <div class="links">
+        <a href="./04-登录短信二次验证/流程图.html">打开流程图</a>
+        <a class="ghost" href="./04-登录短信二次验证/index.html">阅读需求</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <span class="tag">05</span><span class="tag">竞品分析</span>
+      <h3>唐僧叨叨 IM 功能说明</h3>
+      <p>对公开 IM 产品做功能归档与说明，体现调研和结构化输出。页内可切简化版 / 详情版。</p>
+      <div class="links">
+        <a href="./05-唐僧叨叨IM竞品分析/index.html">打开报告</a>
+      </div>
+    </article>
+
+    <footer>
+      源文件在 BTY 原目录，本页只预览作品集拷贝。完整说明见同目录「说明.md」。
+    </footer>
+  </div>
+</body>
+</html>

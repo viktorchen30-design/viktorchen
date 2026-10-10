@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>flow</title>
+  <style>
+    html, body { margin: 0; background: #e8edf2; }
+    img { display: block; width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <img src="flowchart.svg" alt="" />
+  <script>
+    function notifyHeight() {
+      var img = document.querySelector("img");
+      var h = (img && img.offsetHeight) ? img.offsetHeight : (document.documentElement.scrollHeight || 0);
+      if (h && window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: "veigar-proto-resize", height: Math.ceil(h) }, "*");
+      }
+    }
+    var img = document.querySelector("img");
+    if (img) img.addEventListener("load", notifyHeight);
+    window.addEventListener("load", notifyHeight);
+    setTimeout(notifyHeight, 80);
+    setTimeout(notifyHeight, 400);
+  </script>
+</body>
+</html>

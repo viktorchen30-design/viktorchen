@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>注单无数据 · 原生场馆引导原型</title>
+  <style>
+    :root {
+      --red: #e53935;
+      --text: #222;
+      --muted: #9299a5;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      padding: 16px;
+      background: #e9edf2;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", Arial, sans-serif;
+    }
+    .page {
+      width: min(100%, 820px);
+      margin: 0 auto;
+    }
+    .head {
+      margin-bottom: 12px;
+      padding: 14px 16px;
+      border: 1px solid #dfe5ec;
+      border-radius: 12px;
+      background: #fff;
+    }
+    .head h1 {
+      margin: 0 0 6px;
+      font-size: 17px;
+    }
+    .head p {
+      margin: 0;
+      color: #667085;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .lang {
+      border: 1px solid #d0d5dd;
+      border-radius: 999px;
+      background: #fff;
+      color: #344054;
+      padding: 5px 12px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .lang.active {
+      border-color: var(--red);
+      background: #fff1f0;
+      color: #cf1322;
+      font-weight: 700;
+    }
+    .stage {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .case {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+    }
+    .case-label {
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #dfe5ec;
+      color: #344054;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .phone {
+      position: relative;
+      width: 310px;
+      height: 638px;
+      overflow: hidden;
+      border: 1px solid #cfd5dd;
+      border-radius: 13px;
+      background: #f7f7f8;
+      box-shadow: 0 12px 30px rgba(16, 24, 40, .16);
+    }
+    .phone > img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .empty-copy {
+      position: absolute;
+      top: 220px;
+      left: 0;
+      right: 0;
+      min-height: 118px;
+      padding: 2px 18px 14px;
+      background: #f7f7f8;
+      text-align: center;
+    }
+    .empty-title {
+      margin: 0;
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 700;
+      color: #15171a;
+    }
+    .empty-desc {
+      margin: 1px 0 13px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 18px;
+    }
+    .bet-now {
+      min-width: 128px;
+      height: 34px;
+      border: 0;
+      border-radius: 18px;
+      background: var(--red);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(229, 57, 53, .22);
+    }
+    .bet-now:active { transform: scale(.98); }
+    .toast {
+      position: absolute;
+      left: 50%;
+      bottom: 92px;
+      transform: translateX(-50%) translateY(8px);
+      width: max-content;
+      max-width: 82%;
+      padding: 8px 12px;
+      border-radius: 7px;
+      background: rgba(0, 0, 0, .78);
+      color: #fff;
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.4;
+      opacity: 0;
+      pointer-events: none;
+      transition: .18s ease;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .note {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 9px;
+      background: #fff;
+      color: #667085;
+      font-size: 11px;
+      line-height: 1.6;
+      text-align: center;
+    }
+    @media (max-width: 700px) {
+      body { padding: 8px; }
+      .head { padding: 10px 12px; }
+      .stage { gap: 12px; }
+      .phone {
+        width: min(310px, calc(100vw - 16px));
+        height: min(638px, calc((100vw - 16px) * 2.058));
+      }
+      .empty-copy { top: 52.65%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="head">
+      <h1>注单 TAB 无数据 · 完成后效果示意</h1>
+      <p>
+        示意空状态文案与「立即投注」按钮。点击后进入对应原生场馆页（＝首页顶栏场馆A／场馆B 进馆，不是切注单 Tab）。
+      </p>
+      <div class="controls" aria-label="切换语言">
+        <button class="lang active" data-lang="zh">中文</button>
+        <button class="lang" data-lang="en">English</button>
+        <button class="lang" data-lang="vi">Tiếng Việt</button>
+      </div>
+    </header>
+
+    <section class="stage">
+      <article class="case">
+        <div class="case-label">场馆A · 无数据空状态</div>
+        <div class="phone" data-venue="场馆A原生场馆">
+          <div class="empty-copy">
+            <p class="empty-title">暂无数据</p>
+            <p class="empty-desc">前往查看精彩赛事</p>
+            <button class="bet-now">立即投注</button>
+          </div>
+          <div class="toast"></div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="case-label">场馆B · 无数据空状态</div>
+        <div class="phone" data-venue="场馆B原生场馆">
+          <div class="empty-copy">
+            <p class="empty-title">暂无数据</p>
+            <p class="empty-desc">前往查看精彩赛事</p>
+            <button class="bet-now">立即投注</button>
+          </div>
+          <div class="toast"></div>
+        </div>
+      </article>
+    </section>
+
+    <div class="note">
+      逻辑以需求正文为准。作品集不展示现网对照截图。
+    </div>
+  </main>
+
+  <script>
+    const copy = {
+      zh: {
+        title: "暂无数据",
+        desc: "前往查看精彩赛事",
+        button: "立即投注",
+        jump: venue => `演示：跳转至${venue}`
+      },
+      en: {
+        title: "No Data Yet",
+        desc: "Explore More Events",
+        button: "Bet Now",
+        jump: venue => `Demo: Open ${venue}`
+      },
+      vi: {
+        title: "Chưa có dữ liệu",
+        desc: "Xem thêm các trận đấu hấp dẫn",
+        button: "Cược ngay",
+        jump: venue => `Minh họa: Mở ${venue}`
+      }
+    };
+
+    let currentLang = "zh";
+
+    function render(lang) {
+      currentLang = lang;
+      document.querySelectorAll(".lang").forEach(button => {
+        button.classList.toggle("active", button.dataset.lang === lang);
+      });
+      document.querySelectorAll(".phone").forEach(phone => {
+        phone.querySelector(".empty-title").textContent = copy[lang].title;
+        phone.querySelector(".empty-desc").textContent = copy[lang].desc;
+        phone.querySelector(".bet-now").textContent = copy[lang].button;
+      });
+    }
+
+    document.querySelectorAll(".lang").forEach(button => {
+      button.addEventListener("click", () => render(button.dataset.lang));
+    });
+
+    document.querySelectorAll(".bet-now").forEach(button => {
+      button.addEventListener("click", () => {
+        const phone = button.closest(".phone");
+        const toast = phone.querySelector(".toast");
+        toast.textContent = copy[currentLang].jump(phone.dataset.venue);
+        toast.classList.add("show");
+        clearTimeout(phone.toastTimer);
+        phone.toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+      });
+    });
+
+    function notifyProtoHeight() {
+      try {
+        if (!(window.parent && window.parent !== window)) return;
+        const page = document.querySelector(".page");
+        if (!page) return;
+        const height = Math.ceil(page.getBoundingClientRect().bottom + 16);
+        window.parent.postMessage(
+          { type: "veigar-proto-resize", height },
+          "*"
+        );
+      } catch (_) {}
+    }
+
+    window.addEventListener("load", notifyProtoHeight);
+    window.addEventListener("resize", notifyProtoHeight);
+    setTimeout(notifyProtoHeight, 80);
+    setTimeout(notifyProtoHeight, 300);
+  </script>
+</body>
+</html>

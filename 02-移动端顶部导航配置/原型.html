@@ -37,7 +37,7 @@
     try {
       if (window.parent && window.parent !== window) {
         const h = Math.max(document.documentElement.scrollHeight, 280);
-        window.parent.postMessage({ type: 'veigar-proto-resize', height: h + 8 }, '*');
+        window.parent.postMessage({ type: 'proto-resize', height: h + 8 }, '*');
       }
     } catch (e) {}
   </script>

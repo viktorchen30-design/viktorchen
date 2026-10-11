@@ -803,7 +803,7 @@
       try {
         if (!(window.parent && window.parent !== window)) return;
         const h = Math.max(document.documentElement.scrollHeight || 0, document.body.scrollHeight || 0, 760);
-        window.parent.postMessage({ type: "veigar-proto-resize", height: Math.ceil(h + 8) }, "*");
+        window.parent.postMessage({ type: "proto-resize", height: Math.ceil(h + 8) }, "*");
       } catch (e) {}
     }
     (function () {

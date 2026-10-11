@@ -444,7 +444,7 @@
       try {
         if (!(window.parent && window.parent !== window)) return;
         const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight, 720);
-        window.parent.postMessage({ type: 'veigar-proto-resize', height: Math.ceil(h + 8) }, '*');
+        window.parent.postMessage({ type: 'proto-resize', height: Math.ceil(h + 8) }, '*');
       } catch (e) {}
     }
     try { if (window.parent && window.parent !== window) document.documentElement.classList.add('is-embed'); } catch (e) { document.documentElement.classList.add('is-embed'); }

@@ -283,7 +283,7 @@
         if (!page) return;
         const height = Math.ceil(page.getBoundingClientRect().bottom + 16);
         window.parent.postMessage(
-          { type: "veigar-proto-resize", height },
+          { type: "proto-resize", height },
           "*"
         );
       } catch (_) {}

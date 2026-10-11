@@ -16,7 +16,7 @@
       var img = document.querySelector("img");
       var h = (img && img.offsetHeight) ? img.offsetHeight : (document.documentElement.scrollHeight || 0);
       if (h && window.parent && window.parent !== window) {
-        window.parent.postMessage({ type: "veigar-proto-resize", height: Math.ceil(h) }, "*");
+        window.parent.postMessage({ type: "proto-resize", height: Math.ceil(h) }, "*");
       }
     }
     var img = document.querySelector("img");

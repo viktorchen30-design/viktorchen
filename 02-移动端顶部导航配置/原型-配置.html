@@ -195,7 +195,7 @@
       </div>
       <div class="content">
         <div class="hint">
-          <b>本页仅后台配置</b>。列表含窄列 <b>业务标识</b>（只读：<code>db</code>／<code>b</code>／<code>game</code>／<code>live</code>／<code>square</code>）；只配图／名；顺序由「导航排序」管。中国站第 4 项一行双套（编辑同页配有／无直播）。权限／用户端见其它原型。
+          <b>本页仅后台配置</b>。列表含窄列 <b>业务标识</b>（只读：<code>vb</code>／<code>va</code>／<code>game</code>／<code>live</code>／<code>square</code>）；只配图／名；顺序由「导航排序」管。中国站第 4 项一行双套（编辑同页配有／无直播）。权限／用户端见其它原型。
         </div>
         <div class="panel">
           <div class="site-tabs" id="siteTabs"></div>
@@ -306,9 +306,9 @@
       };
     }
     const store = {
-      cn: [simpleRow('场馆B','DB','db'), simpleRow('场馆A','B','b'), simpleRow('游戏','游','game'), dualRow()],
-      vn: [simpleRow('场馆B','DB','db'), simpleRow('场馆A','B','b'), simpleRow('游戏','游','game'), simpleRow('直播','播','live')],
-      intl: [simpleRow('场馆B','DB','db'), simpleRow('场馆A','B','b'), simpleRow('游戏','游','game'), simpleRow('直播','播','live')]
+      cn: [simpleRow('场馆B','B','vb'), simpleRow('场馆A','A','va'), simpleRow('游戏','游','game'), dualRow()],
+      vn: [simpleRow('场馆B','B','vb'), simpleRow('场馆A','A','va'), simpleRow('游戏','游','game'), simpleRow('直播','播','live')],
+      intl: [simpleRow('场馆B','B','vb'), simpleRow('场馆A','A','va'), simpleRow('游戏','游','game'), simpleRow('直播','播','live')]
     };
     let station = 'cn', editIndex = -1, draft = null, pendingKey = '', pendingScope = 'simple';
     const $ = (id) => document.getElementById(id);

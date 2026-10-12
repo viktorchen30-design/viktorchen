@@ -95,7 +95,7 @@
 </head>
 <body>
   <div class="hint">
-    <b>本页仅用户端</b>：皮肤按 <code>navItemCode</code>（<code>db</code>／<code>b</code>／<code>game</code>／<code>live</code>／<code>square</code>）绑定。<b>本需求不管调位</b>；下方「顺序」开关仅 <b>模拟</b>既有导航排序，用来验证调位后图仍跟代号、不会对错。选中按代号。中国站第 4 格按有／无直播取 <code>live</code>／<code>square</code>。
+    <b>本页仅用户端</b>：皮肤按 <code>navItemCode</code>（<code>vb</code>／<code>va</code>／<code>game</code>／<code>live</code>／<code>square</code>）绑定。<b>本需求不管调位</b>；下方「顺序」开关仅 <b>模拟</b>既有导航排序，用来验证调位后图仍跟代号、不会对错。选中按代号。中国站第 4 格按有／无直播取 <code>live</code>／<code>square</code>。
   </div>
   <div class="bar">
     <div class="site-row">
@@ -105,8 +105,8 @@
     </div>
     <div class="sim-row" id="orderSimRow">
       <span class="lab">模拟既有导航排序（非本需求功能）：</span>
-      <button type="button" class="btn active" id="btnOrderDbFirst">顺序：DB → B</button>
-      <button type="button" class="btn" id="btnOrderBFirst">顺序：B → DB</button>
+      <button type="button" class="btn active" id="btnOrderVbFirst">顺序：vb → va</button>
+      <button type="button" class="btn" id="btnOrderVaFirst">顺序：va → vb</button>
     </div>
     <div class="sim-row" id="liveSimRow">
       <span class="lab">中国站 · 第4格账号模拟：</span>
@@ -189,26 +189,26 @@
     // 皮肤字典：按代号存，不按位置
     const skins = {
       cn: {
-        db: skin('db', '场馆B', 'DB'),
-        b: skin('b', '场馆A', 'B'),
+        vb: skin('vb', '场馆B', 'B'),
+        va: skin('va', '场馆A', 'A'),
         game: skin('game', '游戏', '游'),
         live: skin('live', '直播', '播'),
         square: skin('square', '广场', '广')
       },
       vn: {
-        db: skin('db', '场馆B', 'DB'),
-        b: skin('b', '场馆A', 'B'),
+        vb: skin('vb', '场馆B', 'B'),
+        va: skin('va', '场馆A', 'A'),
         game: skin('game', '游戏', '游'),
         live: skin('live', '直播', '播')
       },
       intl: {
-        db: skin('db', '场馆B', 'DB'),
-        b: skin('b', '场馆A', 'B'),
+        vb: skin('vb', '场馆B', 'B'),
+        va: skin('va', '场馆A', 'A'),
         game: skin('game', '游戏', '游'),
         live: skin('live', '直播', '播')
       }
     };
-    let station = 'cn', selectedCode = 'db', clientHasLive = true, dbBeforeB = true;
+    let station = 'cn', selectedCode = 'vb', clientHasLive = true, vbBeforeVa = true;
     const $ = (id) => document.getElementById(id);
     function toast(msg) {
       const el = $('toast'); el.textContent = msg; el.classList.add('show');
@@ -217,7 +217,7 @@
     /** 先拿顺序（导航排序），再按代号取皮 */
     function clientRows() {
       const dict = skins[station];
-      const head = dbBeforeB ? [dict.db, dict.b] : [dict.b, dict.db];
+      const head = vbBeforeVa ? [dict.vb, dict.va] : [dict.va, dict.vb];
       const fourth = station === 'cn'
         ? (clientHasLive ? dict.live : dict.square)
         : dict.live;
@@ -238,14 +238,14 @@
       $('liveSimRow').classList.toggle('hidden', station !== 'cn');
       $('btnLiveYes').classList.toggle('active', clientHasLive);
       $('btnLiveNo').classList.toggle('active', !clientHasLive);
-      $('btnOrderDbFirst').classList.toggle('active', dbBeforeB);
-      $('btnOrderBFirst').classList.toggle('active', !dbBeforeB);
-      const orderStr = dbBeforeB ? '<code>db</code> → <code>b</code>' : '<code>b</code> → <code>db</code>';
+      $('btnOrderVbFirst').classList.toggle('active', vbBeforeVa);
+      $('btnOrderVaFirst').classList.toggle('active', !vbBeforeVa);
+      const orderStr = vbBeforeVa ? '<code>vb</code> → <code>va</code>' : '<code>va</code> → <code>vb</code>';
       const fourth = station === 'cn'
         ? (clientHasLive ? '<code>live</code>（有直播）' : '<code>square</code>（无直播）')
         : '<code>live</code>';
       $('orderNote').innerHTML = '当前展示顺序：' + orderStr + ' → <code>game</code> → ' + fourth +
-        '　｜　图／名始终跟代号；调换 场馆B／场馆A 后 <b>DB 仍用 db 图、B 仍用 b 图</b>（禁止按下标对图）';
+        '　｜　图／名始终跟代号；调换 场馆B／场馆A 后 <b>vb 仍用 vb 图、va 仍用 va 图</b>（禁止按下标对图）';
     }
     function render() {
       $('stationLab').textContent = STATION[station];
@@ -262,12 +262,12 @@
     document.querySelectorAll('.site-tab').forEach((btn) => {
       btn.onclick = () => {
         document.querySelectorAll('.site-tab').forEach((x) => x.classList.remove('active'));
-        btn.classList.add('active'); station = btn.dataset.site; selectedCode = 'db'; render();
+        btn.classList.add('active'); station = btn.dataset.site; selectedCode = 'vb'; render();
         toast('已切换：' + STATION[station]);
       };
     });
-    $('btnOrderDbFirst').onclick = () => { dbBeforeB = true; render(); toast('顺序：DB → B（图仍按 db／b）'); };
-    $('btnOrderBFirst').onclick = () => { dbBeforeB = false; render(); toast('顺序：B → DB（图仍按 db／b）'); };
+    $('btnOrderVbFirst').onclick = () => { vbBeforeVa = true; render(); toast('顺序：vb → va（图仍按 vb／va）'); };
+    $('btnOrderVaFirst').onclick = () => { vbBeforeVa = false; render(); toast('顺序：va → vb（图仍按 vb／va）'); };
     $('btnLiveYes').onclick = () => { clientHasLive = true; render(); toast('第4格 → live'); };
     $('btnLiveNo').onclick = () => { clientHasLive = false; render(); toast('第4格 → square'); };
     function notifyH() {

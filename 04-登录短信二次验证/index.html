@@ -639,7 +639,7 @@
       }
 
       // 文档刷新：停留在刚才阅读位置（不置顶）。原型.html 单独打开时自行置顶，与文档分开。
-      const DOC_SCROLL_KEY = 'bty-local-doc-scroll:' + location.pathname
+      const DOC_SCROLL_KEY = 'doc-local-scroll:' + location.pathname
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
       let savedScroll = 0
       try { savedScroll = Number(sessionStorage.getItem(DOC_SCROLL_KEY) || 0) || 0 } catch (_) {}

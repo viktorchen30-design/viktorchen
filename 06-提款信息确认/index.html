@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>【PC／H5／APP】提款信息确认</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <article class="page">
+    <h1>【PC／H5／APP】提款信息确认</h1>
+    <div class="meta">
+      <div><span>负责人</span><b>Viktor</b></div>
+      <div class="wait"><span>简历口径</span><b>未单列重点项目｜待排期档</b></div>
+      <div><span>端</span><b>PC / H5 / APP · 资金</b></div>
+      <div class="wait"><span>难度</span><b>中 · 前端+资金</b></div>
+    </div>
+
+    <nav class="toc-sticky" aria-label="本文导航">
+      <a href="../index.html">作品集</a>
+      <a href="#map">需求范围</a>
+      <a href="#six">判定流程</a>
+      <a href="#proto">原型</a>
+      <a href="#before">改造前后</a>
+      <a href="#展示">弹窗展示</a>
+      <a href="#状态">状态</a>
+      <a href="#文案">文案</a>
+      <a href="#异常与边界">边界</a>
+      <a href="#验收标准">验收标准</a>
+    </nav>
+
+    <h2 id="map">需求范围</h2>
+    <div class="read-path">
+      <div class="card">
+        <strong>改造范围</strong>
+        <p>中国站／越南站／国际站。提款页底部点「提现」先弹出「确认提现信息」，核对当前这一笔再提交。提款页以外的付款不在这期。不新开权限。APP 提现页是原生、包还没更新的，仍直接提交。</p>
+      </div>
+      <div class="card">
+        <strong>成功标准</strong>
+        <p>点「提现」先看到确认窗，不能直接提交（旧包原生页除外）。窗里就是当前选中的这一笔。向右滑到头才往下走。开了提现短信验证，验证码填对并点「确定」才进入提交中。</p>
+      </div>
+    </div>
+    <p>现在点「提现」申请就提交了，中间没有再看收款信息。选错地址，钱会进错误账户。页面上现在就会拦住的（没选收款、金额不符合等），仍在原页提示，确认窗不出现。</p>
+
+    <h2 id="six">判定流程</h2>
+    <div class="flow-block">
+      <div class="steps">
+        <div class="step"><span class="n">1</span><b>点「提现」</b><p>页面校验没过：原页提示，不出窗。</p></div>
+        <div class="step"><span class="n">2</span><b>确认窗</b><p>类型、到账信息、金额、预约提现，都随当前选择变。</p></div>
+        <div class="step"><span class="n">3</span><b>滑动</b><p>滑到头才往下走。没到头松手，滑块回起点。关掉不提交，已填还在。</p></div>
+        <div class="step"><span class="n">4</span><b>短信</b><p>没开：进入提交中。开了：先出「提现验证码」。空着或填错停在这页。</p></div>
+        <div class="step"><span class="n">5</span><b>提交中</b><p>不能再滑。这时关掉，这一笔正常生效。</p></div>
+        <div class="step"><span class="n">6</span><b>已提交</b><p>点「我知道了」回提现页。失败退回未滑动的确认窗，可再滑一次。</p></div>
+      </div>
+    </div>
+    <p>没开短信时顺序：确认窗 → 滑动 → 提交中 → 成功。开了短信，滑动和提交中之间多「提现验证码」。获取验证码、图形验证、倒计时都不算提交。同一笔不验两次。H5 与 PC 同一套。验证码页按钮用现在提现页的红色。</p>
+
+    <h2 id="proto">原型</h2>
+    <div class="proto">
+      <p>顶栏切 PC／H5，以及开／关提款验证。点「提现」后滑到头确认；开了验证填 <strong>123456</strong>。空着或填错会停在验证码页。</p>
+      <p class="proto-links"><a href="./原型.html">打开原型</a></p>
+    </div>
+
+    <h2 id="before">改造前 → 改造后</h2>
+    <table><thead><tr><th>原来</th><th>现在</th></tr></thead><tbody>
+      <tr><td>点「提现」申请直接提交</td><td>先出确认窗，滑到头才往下走</td></tr>
+      <tr><td>中间看不到本笔收款信息</td><td>窗里复述当前类型、到账、金额、预约</td></tr>
+      <tr><td>开了提现短信验证</td><td>滑到头后出验证码页；填对并点「确定」才提交</td></tr>
+      <tr><td>APP 原生旧包</td><td>仍直接提交，不强制更新</td></tr>
+    </tbody></table>
+    <p>下面是同一套规则的展开。点开再看。</p>
+
+<details class="fold" id="展示"><summary><b>弹窗展示</b><span class="hint">不同类型看到哪些行；没有的项不空出一行。</span></summary><div class="fold-body">
+<table><thead><tr><th>当前提现类型</th><th>弹窗里看到</th></tr></thead><tbody>
+<tr><td>银行卡提现、专属提现</td><td>提现类型、到账银行、提现金额、预约提现时间</td></tr>
+<tr><td>USDT提现</td><td>提现类型、网络、收款地址、提现金额、预约提现时间</td></tr>
+<tr><td>EB Pay／CB Pay／JD Pay／支付宝收款码</td><td>提现类型、这一方式现在的收款账号、提现金额、预约提现时间</td></tr>
+</tbody></table>
+<p>右侧都是当前这一笔，会变，不写死。银行要对上是哪一张卡，虚拟币要看到网络和地址。预约提现用当前选中那一档，选了加送的一起写上。即时提现不写加送。没绑定收款的，仍是现在的「请先添加」，确认窗不出现。确认项下方红底红字，整句用文案表，不拆开。限额、手续费、加送、到账说明仍在原页面，确认窗不另做一套算法。</p>
+<p>没开短信，滑到头只发一笔。开了短信，验证码填对并点一次「确定」只提交一笔。提交出去的类型、收款、金额、预约，就是窗里确认时看到的那一套。交互见上面「原型」。</p>
+</div></details>
+
+<details class="fold" id="状态"><summary><b>状态</b><span class="hint">校验、滑动、短信、提交中、失败各看到什么。</span></summary><div class="fold-body">
+<table><thead><tr><th>状态</th><th>看到什么</th></tr></thead><tbody>
+<tr><td>页面校验没过</td><td>停在提款页，提示跟现在一样。没有确认窗</td></tr>
+<tr><td>没滑到头松手</td><td>滑块回起点，不提交</td></tr>
+<tr><td>没滑到头就关掉</td><td>回提款页，已填不变，不提交</td></tr>
+<tr><td>滑到头，没开短信</td><td>进入提交中</td></tr>
+<tr><td>滑到头，开了短信</td><td>「提现验证码」。空着或填错停在这页。关掉则退回未滑动的确认窗</td></tr>
+<tr><td>验证码填对并点「确定」</td><td>进入提交中。点一次只提交一笔</td></tr>
+<tr><td>提交中关掉</td><td>这一笔正常生效</td></tr>
+<tr><td>提交成功</td><td>已提交。点「我知道了」回提现页</td></tr>
+<tr><td>滑动中、转圈中失败，或关掉后这一笔失败</td><td>退回未滑动的确认窗。不显示已提交。可再滑一次，不会自己再补一笔</td></tr>
+<tr><td>改完再打开</td><td>类型、渠道、金额、预约提现都是改完的</td></tr>
+<tr><td>APP 提现页是原生、包还没更新</td><td>直接提交，没有确认窗</td></tr>
+</tbody></table>
+</div></details>
+
+<details class="fold" id="文案"><summary><b>文案</b><span class="hint">确认窗、验证码、提交中、成功。中／越／英／泰。</span></summary><div class="fold-body">
+<p>中国站用中文。越南站用越南文。国际站当前语种是中文用中文，泰文用泰文，其余语系用英文。提现页上已经有的字用现在的。确认窗里的类型、银行或地址、金额、预约，也用这些现成翻译。红字和验证码说明按越南文、泰文里更长的那句排。滑到一半没有新句子。</p>
+<table><thead><tr><th>位置</th><th>中文</th><th>越南文</th><th>英文</th><th>泰文</th></tr></thead><tbody>
+<tr><td>标题</td><td>确认提现信息</td><td>Xác nhận thông tin rút tiền</td><td>Confirm withdrawal details</td><td>ยืนยันข้อมูลการถอน</td></tr>
+<tr><td>滑动条</td><td>滑动确认提现</td><td>Trượt để xác nhận rút tiền</td><td>Slide to confirm withdrawal</td><td>เลื่อนเพื่อยืนยันการถอน</td></tr>
+<tr><td>红字</td><td>请仔细核对本笔到账信息。银行卡核对开户行与卡号尾号；虚拟币核对网络与完整收款地址；同时核对提现金额、预约提现时间。选错后款项将进入错误账户，提交后无法撤回。</td><td>Vui lòng kiểm tra kỹ thông tin nhận tiền của lần rút này. Rút về thẻ ngân hàng thì đối chiếu ngân hàng mở thẻ và các số cuối của số thẻ. Rút tiền mã hóa thì đối chiếu mạng và toàn bộ địa chỉ nhận. Đồng thời đối chiếu số tiền rút và thời gian rút theo hẹn. Chọn sai, tiền sẽ vào nhầm tài khoản và không thể thu hồi sau khi gửi.</td><td>Please check the receiving details for this withdrawal. For a bank card, check the issuing bank and the last digits of the card number. For crypto, check the network and the full receiving address. Also check the withdrawal amount and the scheduled withdrawal time. If these are wrong, the funds will go to the wrong account and cannot be recalled after you submit.</td><td>กรุณาตรวจสอบข้อมูลรับเงินของรายการนี้ให้ละเอียด หากเป็นบัตรธนาคาร ให้ตรวจสอบธนาคารและเลขท้ายบัตร หากเป็นคริปโต ให้ตรวจสอบเครือข่ายและที่อยู่รับเงินแบบเต็ม พร้อมทั้งตรวจสอบจำนวนเงินและเวลาถอนตามนัด หากเลือกผิด เงินจะเข้าบัญชีที่ไม่ถูกต้อง และไม่สามารถเรียกคืนได้หลังจากส่ง</td></tr>
+<tr><td>验证码标题</td><td>提现验证码</td><td>Mã xác minh rút tiền</td><td>Withdrawal verification code</td><td>รหัสยืนยันการถอน</td></tr>
+<tr><td>验证码说明</td><td>为了您的账户安全，我们已给您绑定的手机号发送短信验证码</td><td>Để bảo vệ tài khoản, chúng tôi đã gửi mã xác minh qua SMS tới số điện thoại bạn đã liên kết.</td><td>For your account security, we have sent an SMS code to your linked phone number.</td><td>เพื่อความปลอดภัยของบัญชี เราได้ส่งรหัสยืนยันทาง SMS ไปยังหมายเลขโทรศัพท์ที่ผูกไว้แล้ว</td></tr>
+<tr><td>手机号标签</td><td>绑定的手机号码</td><td>Số điện thoại đã liên kết</td><td>Linked phone number</td><td>หมายเลขโทรศัพท์ที่ผูกไว้</td></tr>
+<tr><td>验证码输入</td><td>请输入手机验证码</td><td>Nhập mã xác minh</td><td>Enter the SMS code</td><td>กรอกรหัสยืนยันทาง SMS</td></tr>
+<tr><td>获取验证码</td><td>获取验证码</td><td>Lấy mã</td><td>Get code</td><td>รับรหัส</td></tr>
+<tr><td>重新获取</td><td>重新获取验证码</td><td>Lấy lại mã</td><td>Resend code</td><td>รับรหัสอีกครั้ง</td></tr>
+<tr><td>确定</td><td>确定</td><td>Xác nhận</td><td>Confirm</td><td>ยืนยัน</td></tr>
+<tr><td>提交中标题</td><td>正在提交提现申请</td><td>Đang gửi yêu cầu rút tiền</td><td>Submitting your withdrawal</td><td>กำลังส่งคำขอถอนเงิน</td></tr>
+<tr><td>提交中说明</td><td>请稍候</td><td>Vui lòng chờ</td><td>Please wait</td><td>กรุณารอสักครู่</td></tr>
+<tr><td>成功标题</td><td>提现申请已提交</td><td>Đã gửi yêu cầu rút tiền</td><td>Withdrawal request submitted</td><td>ส่งคำขอถอนเงินแล้ว</td></tr>
+<tr><td>成功说明</td><td>收款信息与确认时一致</td><td>Thông tin nhận tiền trùng với lúc xác nhận</td><td>Receiving details match what you confirmed</td><td>ข้อมูลรับเงินตรงกับตอนที่ยืนยัน</td></tr>
+<tr><td>成功按钮</td><td>我知道了</td><td>Đã hiểu</td><td>Got it</td><td>รับทราบ</td></tr>
+</tbody></table>
+<p>确认窗里这几行用提现页现成的字：提现类型、到账银行或网络和收款地址或该方式账号、提现金额、预约提现。即时提现不写加送。选了加送的，和档位写在一起。手机号用当前绑定的号码，只翻译「绑定的手机号码」。</p>
+</div></details>
+
+<details class="fold" id="异常与边界"><summary><b>异常与边界</b><span class="hint">窗里和提交不一致、滑一半、旧包。</span></summary><div class="fold-body">
+<table><thead><tr><th>#</th><th>情况</th><th>结果</th></tr></thead><tbody>
+<tr><td>1</td><td>点「提现」没有确认窗，直接提交</td><td>做错了。APP 原生旧包仍直接提交，不算没做对</td></tr>
+<tr><td>2</td><td>窗里的银行、网络、账号、地址、金额或预约，和当前选中不是同一套；或窗里是地址 A，提交变成地址 B</td><td>做错了。改完再打开必须是改完的</td></tr>
+<tr><td>3</td><td>USDT 等看不到网络或地址</td><td>做错了</td></tr>
+<tr><td>4</td><td>滑到一半松手也提交了；或滑一次／点一次「确定」提交了两笔</td><td>做错了</td></tr>
+<tr><td>5</td><td>提交失败却显示申请成功；失败没有退回未滑动的确认窗</td><td>做错了</td></tr>
+<tr><td>6</td><td>关掉弹窗，页上已填被清掉</td><td>做错了</td></tr>
+<tr><td>7</td><td>开了短信，滑到头后没有验证码页，或还没点「确定」就进入提交中；空着或填错却离开了验证码页；没开却多要一次；同一笔验了两次</td><td>做错了</td></tr>
+<tr><td>8</td><td>APP 原生旧包被改到不能提款</td><td>做错了</td></tr>
+<tr><td>9</td><td>已经进入提交中再关掉，这一笔被取消</td><td>做错了。验证码页关掉不提交，不算没做对</td></tr>
+</tbody></table>
+</div></details>
+
+<details class="fold" id="验收标准"><summary><b>验收标准</b><span class="hint">出窗、滑动、短信、提交一致性。需要时展开。</span></summary><div class="fold-body">
+<table><thead><tr><th>#</th><th>【必验】</th><th>预期结果</th></tr></thead><tbody>
+<tr><td>1</td><td>三站 PC、H5 点「提现」</td><td>先出确认窗。页面校验没过的，仍在原页提示，不出窗</td></tr>
+<tr><td>2</td><td>APP</td><td>新包原生页也先出确认窗。旧包仍直接提交。提现页是 H5 的，出确认窗</td></tr>
+<tr><td>3</td><td>窗里字段</td><td>类型、收款、金额、预约与当前选择一致。USDT 等能看到网络和地址</td></tr>
+<tr><td>4</td><td>滑动</td><td>滑到头才往下走。没滑到头就关掉，不提交，已填还在。进入提交中之后关掉，这一笔正常生效</td></tr>
+<tr><td>5</td><td>短信</td><td>没开，滑到头只发一笔。开了，填对并点一次「确定」只提交一笔。空着或填错停在验证码页。关掉验证码页，退回未滑动的确认窗</td></tr>
+<tr><td>6</td><td>失败</td><td>滑动中、转圈中，或关掉之后这一笔失败，退回未滑动的确认窗，不显示申请成功。可以再滑一次，不会自动补发</td></tr>
+<tr><td>7</td><td>提交出去的收款信息</td><td>与窗里确认的那一套一致</td></tr>
+<tr><td>8</td><td>验证码页</td><td>操作不新做；获取验证码不算提交；按钮用提现页红色；同一笔只验一次；H5 与 PC 同一套。句子按文案表</td></tr>
+</tbody></table>
+</div></details>
+  </article>
+  <button type="button" class="to-top" aria-label="回到顶部">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg>
+    <span>回顶部</span>
+  </button>
+  <script src="../toc-nav.js?v=12"></script>
+</body>
+</html>

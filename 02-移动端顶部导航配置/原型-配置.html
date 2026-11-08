@@ -38,6 +38,14 @@
     }
     .header .title { font-size: 14px; color: var(--text-2); }
     .header .right { margin-left: auto; color: var(--text-2); font-size: 12px; }
+    a.back-prd {
+      position: fixed; top: 10px; right: 12px; z-index: 200;
+      display: none; align-items: center; height: 32px; padding: 0 12px;
+      border-radius: 8px; background: #1d4ed8; color: #fff;
+      text-decoration: none; font-size: 13px; font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,.22);
+    }
+    html.standalone a.back-prd { display: inline-flex; }
     .header .dl {
       height: 28px; padding: 0 10px; border: 1px solid var(--border-2); border-radius: 4px;
       background: #fff; font-size: 12px; font-family: inherit; color: var(--text-2);
@@ -172,6 +180,7 @@
   </style>
 </head>
 <body>
+  <a class="back-prd" href="./index.html">返回需求</a>
   <div class="layout">
     <aside class="sider">
       <div class="sider-brand">网站配置 <span>▾</span></div>
@@ -450,6 +459,7 @@
     try { if (window.parent && window.parent !== window) document.documentElement.classList.add('is-embed'); } catch (e) { document.documentElement.classList.add('is-embed'); }
     window.addEventListener('load', notifyH); setTimeout(notifyH, 100); setTimeout(notifyH, 400);
     render();
+    if (window.parent === window) document.documentElement.classList.add("standalone");
   </script>
 </body>
 </html>

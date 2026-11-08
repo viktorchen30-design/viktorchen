@@ -1,5 +1,22 @@
 (function () {
   var PASS = '11223456';
+  var KEY = 'viktor-portfolio-ok';
+
+  function unlocked() {
+    try {
+      return sessionStorage.getItem(KEY) === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function remember() {
+    try {
+      sessionStorage.setItem(KEY, '1');
+    } catch (e) {}
+  }
+
+  if (unlocked()) return;
 
   var css = document.createElement('style');
   css.textContent =
@@ -11,11 +28,12 @@
     '#portfolio-gate p{margin:0 0 16px;color:#5b6573;font-size:14px}' +
     '#portfolio-gate input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #d5e2ee;font-size:15px}' +
     '#portfolio-gate button{margin-top:12px;width:100%;padding:10px;border:0;background:#1f4e79;color:#fff;font-size:14px;cursor:pointer}' +
-    '#portfolio-gate .err{color:#a33;font-size:13px;margin-top:8px;min-height:18px}';
+    '#portfolio-gate .err{color:#a33;font-size:13px;min-height:18px;margin-top:8px}';
   document.documentElement.setAttribute('data-gate', '1');
   document.head.appendChild(css);
 
   function unlock() {
+    remember();
     document.documentElement.removeAttribute('data-gate');
     var el = document.getElementById('portfolio-gate');
     if (el) el.remove();

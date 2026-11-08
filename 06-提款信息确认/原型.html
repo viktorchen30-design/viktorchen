@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>确认提现信息</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
+  button, input { font-family: inherit; }
+  body { background: #111; color: #fff; }
+  body.shot .switch { display: none; }
+  .chrome {
+    position: sticky; top: 0; z-index: 50;
+    background: #1c1c1c; border-bottom: 1px solid #333;
+    padding: 10px 12px 8px;
+  }
+  .switch { display: flex; gap: 6px; align-items: center; justify-content: center; background: rgba(0,0,0,.45); padding: 6px; border-radius: 999px; width: max-content; margin: 0 auto; }
+  .switch button { border: 0; background: transparent; color: #ddd; border-radius: 999px; padding: 6px 14px; cursor: pointer; white-space: nowrap; }
+  .switch button.on { background: #2563eb; color: #fff; }
+  .switch .div { width: 1px; align-self: stretch; background: rgba(255,255,255,.28); margin: 4px 2px; }
+  .demo-note { margin: 8px 0 0; color: #d1d5db; font-size: 13px; text-align: center; line-height: 1.45; }
+  .demo-note b { color: #fff; }
+  body.shot .chrome { display: none; }
+  a.back-prd {
+    position: fixed; top: 10px; right: 12px; z-index: 200;
+    display: none; align-items: center; height: 32px; padding: 0 12px;
+    border-radius: 8px; background: #1d4ed8; color: #fff;
+    text-decoration: none; font-size: 13px; font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  }
+  html.standalone a.back-prd { display: inline-flex; }
+  body.shot a.back-prd { display: none; }
+
+  /* PC */
+  #pc { min-height: 100%; background: #141414 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='800'%3E%3Crect fill='%23110d12' width='1400' height='800'/%3E%3Crect fill='%23201822' x='0' y='180' width='280' height='420'/%3E%3Crect fill='%231a2430' x='1080' y='80' width='280' height='520'/%3E%3C/svg%3E") center/cover; display: none; }
+  body.view-pc #pc { display: block; }
+  .pc-top { height: 58px; display: flex; align-items: center; padding: 0 22px; background: rgba(0,0,0,.35); }
+  .logo { color: #e5e7eb; font-weight: 700; letter-spacing: 0.04em; font-size: 16px; }
+  .pc-nav { display: flex; gap: 22px; margin-left: 28px; color: #ddd; font-size: 14px; }
+  .pc-user { margin-left: auto; color: #eee; font-size: 13px; }
+  .pc-mask { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
+  .pc-win { width: 760px; max-height: calc(100vh - 48px); overflow: auto; background: #2a2a2a; border-radius: 10px; padding: 16px 18px 14px; position: relative; box-shadow: 0 18px 50px rgba(0,0,0,.45); }
+  .pc-x { position: absolute; right: 14px; top: 10px; color: #bbb; font-size: 22px; cursor: pointer; background: none; border: 0; }
+  .pc-head { display: flex; gap: 12px; margin-bottom: 12px; }
+  .avatar { width: 54px; height: 54px; border-radius: 50%; background: linear-gradient(135deg,#6a5344,#2c241f); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .who { font-size: 14px; }
+  .who small { display: block; color: #9a9a9a; margin-top: 4px; }
+  .wallet { margin-left: auto; width: 280px; height: 72px; border-radius: 8px; background: linear-gradient(90deg,#3a3428,#2a2a2a); padding: 10px 12px; }
+  .wallet b { font-size: 13px; }
+  .wallet div { margin-top: 8px; color: #f0d78c; }
+  .tabs { display: flex; gap: 8px; margin: 8px 0 14px; }
+  .tabs button, .chip, .amt, .slot, .mini { cursor: pointer; }
+  .tabs button { flex: 1; height: 36px; border-radius: 6px; border: 0; background: #3a3a3a; color: #ddd; }
+  .tabs button.on { background: #e10600; color: #fff; }
+  .sec { font-size: 13px; margin: 12px 0 8px; }
+  .sec::before { content: ""; display: inline-block; width: 3px; height: 12px; background: #e10600; margin-right: 6px; vertical-align: -1px; }
+  .chips, .amts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip, .amt { height: 34px; padding: 0 12px; border-radius: 6px; border: 1px solid #4a4a4a; background: #333; color: #eee; font-size: 13px; }
+  .chip.on, .amt.on, .slot.on { border-color: #e10600; color: #fff; }
+  .add { color: #d3544a; font-size: 13px; margin-top: 8px; }
+  .slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .slot { text-align: left; border: 1px solid #4a4a4a; background: #333; color: #eee; border-radius: 8px; padding: 12px; }
+  .slot small { display: block; color: #e0a15a; margin-top: 4px; font-size: 12px; }
+  .foot { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+  .mini { height: 36px; padding: 0 10px; border-radius: 6px; border: 1px solid #555; background: transparent; color: #ddd; font-size: 13px; }
+  .go { margin-left: auto; width: 180px; height: 40px; border: 0; border-radius: 8px; background: #e10600; color: #fff; font-size: 16px; cursor: pointer; }
+  .note { color: #9a9a9a; font-size: 12px; line-height: 1.6; margin-top: 10px; }
+  .note b { color: #e10600; font-weight: 600; }
+
+  /* H5 */
+  #h5 { display: none; min-height: 100%; background: #d8dde3; align-items: center; justify-content: center; padding: 16px 0 24px; }
+  body.view-h5 #h5 { display: flex; }
+  body.shot.view-h5, body.shot.view-h5 #h5 { width: 393px; height: 852px; overflow: hidden; display: block; padding: 0; background: #f4f6f8; }
+  body.shot .phone { margin: 0; }
+  .phone { width: 393px; height: 852px; background: #f4f6f8; color: #1c2430; position: relative; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,.25); }
+  body.shot .phone { box-shadow: none; }
+  .h-status { height: 48px; background: #111; color: #fff; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 16px 6px; font-size: 14px; font-weight: 650; }
+  .h-bar { height: 46px; background: #111; color: #fff; display: flex; align-items: center; justify-content: center; gap: 28px; position: relative; }
+  .h-bar span { color: #bbb; font-size: 16px; }
+  .h-bar span.on { color: #fff; font-weight: 700; border-bottom: 2px solid #e10600; padding-bottom: 6px; }
+  .h-svc { position: absolute; right: 14px; top: 10px; }
+  .asset { margin: 12px; border-radius: 12px; padding: 14px; background: linear-gradient(100deg,#2a211c,#111); color: #fff; }
+  .asset .lab { font-size: 12px; color: #bbb; }
+  .asset .num { font-size: 28px; font-weight: 750; margin-top: 4px; }
+  .vip { display: flex; justify-content: space-between; color: #d7c4a2; font-size: 12px; margin-top: 10px; }
+  .h-body { padding: 0 12px 92px; height: calc(852px - 48px - 46px); overflow: auto; }
+  .h-sec { font-size: 14px; font-weight: 700; margin: 12px 0 8px; }
+  .h-sec::before { content: ""; display: inline-block; width: 3px; height: 12px; background: #e10600; margin-right: 6px; }
+  .h-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .h-chips button, .h-amts button, .h-slot { border: 1px solid #e4e7ee; background: #fff; color: #243044; border-radius: 8px; cursor: pointer; }
+  .h-chips button { height: 34px; padding: 0 10px; font-size: 13px; }
+  .h-chips button.on, .h-amts button.on, .h-slot.on { border-color: #e10600; color: #e10600; }
+  .bank { margin-top: 8px; background: #fff; border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; font-size: 14px; }
+  .h-amts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .h-amts button { height: 36px; }
+  .h-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .h-slot { text-align: left; padding: 10px; }
+  .h-slot small { display: block; color: #d0893a; margin-top: 4px; }
+  .h-go { width: 100%; height: 44px; margin-top: 12px; border: 0; border-radius: 8px; background: #e10600; color: #fff; font-size: 16px; cursor: pointer; }
+  .h-note { color: #8b95a6; font-size: 12px; line-height: 1.6; margin-top: 8px; }
+  .h-nav { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; background: #fff; display: flex; border-top: 1px solid #eee; }
+  .h-nav div { flex: 1; text-align: center; font-size: 11px; color: #8b95a6; padding-top: 10px; }
+  .h-nav div.on { color: #e10600; }
+
+  .overlay { position: absolute; inset: 0; background: rgba(0,0,0,.55); display: none; align-items: center; justify-content: center; z-index: 5; }
+  .overlay.show { display: flex; }
+  .pc-win { position: relative; }
+  .dlg { width: 420px; background: #2f2f2f; color: #fff; border-radius: 14px; padding: 18px 18px 16px; position: relative; }
+  .phone .dlg { width: calc(100% - 32px); background: #fff; color: #1c2430; }
+  .dlg h3 { text-align: center; font-size: 17px; margin: 0 0 8px; }
+  .dlg .x { position: absolute; right: 12px; top: 10px; border: 0; background: none; color: #999; font-size: 20px; cursor: pointer; }
+  .line { display: grid; grid-template-columns: 76px 1fr; gap: 8px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,.08); font-size: 14px; }
+  .phone .line { border-top-color: #eef1f5; }
+  .line span { color: #9aa; }
+  .phone .line span { color: #8b95a6; }
+  .line b { font-weight: 650; text-align: right; word-break: break-all; }
+  .warn { margin-top: 10px; padding: 10px 12px; background: #fff1f0; border: 1px solid #ffb4a8; border-left: 4px solid #e10600; border-radius: 8px; color: #d92d20; font-size: 13px; font-weight: 650; line-height: 1.55; }
+  .warn b { display: block; font-size: 14px; margin-bottom: 4px; }
+  .slide { margin-top: 12px; height: 50px; border-radius: 25px; background: #fde8e6; position: relative; overflow: hidden; user-select: none; touch-action: none; }
+  .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 25px; background: linear-gradient(90deg, #ffb0a8 0%, #ff5d52 46%, #e10600 100%); }
+  .slabel { position: absolute; left: 56px; right: 12px; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; color: #f08b86; font-size: 15px; font-weight: 650; pointer-events: none; }
+  .chevs { position: absolute; left: 16px; top: 0; height: 100%; display: flex; align-items: center; gap: 4px; overflow: hidden; opacity: 0; pointer-events: none; z-index: 1; }
+  .chevs i, .knob i { display: block; width: 8px; height: 8px; border-top: 2.5px solid currentColor; border-right: 2.5px solid currentColor; transform: rotate(45deg); }
+  .knob { position: absolute; left: 4px; top: 4px; width: 42px; height: 42px; border-radius: 50%; background: #fff; color: #e10600; display: flex; align-items: center; justify-content: center; cursor: grab; z-index: 2; box-shadow: 0 2px 8px rgba(225,6,0,.22); }
+  .knob i { margin-left: -3px; }
+  .slide.back .knob, .slide.back .fill { transition: left .28s ease, width .28s ease; }
+  .mid { text-align: center; padding: 28px 8px 12px; }
+  .spin { width: 54px; height: 54px; margin: 0 auto 14px; border-radius: 50%; border: 4px solid rgba(225,6,0,.2); border-top-color: #e10600; animation: rot 0.8s linear infinite; }
+  .okdot { width: 54px; height: 54px; margin: 0 auto 14px; border-radius: 50%; background: #e10600; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+  .mid p { margin: 6px 0 0; color: #9aa; font-size: 13px; }
+  .phone .mid p { color: #8b95a6; }
+  .know { width: 100%; height: 42px; border: 0; border-radius: 8px; background: #e10600; color: #fff; font-size: 15px; cursor: pointer; margin-top: 8px; }
+  .dlg.sms, .phone .dlg.sms { background: #1b2433; color: #fff; }
+  .sms-tip { color: #d5dbe3; font-size: 13px; line-height: 1.55; margin: 8px 0; }
+  .sms-phone { color: #d5dbe3; font-size: 13px; margin-bottom: 12px; }
+  .code-row { display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.16); border-radius: 10px; padding: 8px 10px; }
+  .code-row i { width: 18px; height: 18px; border-radius: 50%; background: #e10600; color: #fff; font-style: normal; font-size: 11px; display: flex; align-items: center; justify-content: center; flex: none; }
+  .code-row input { flex: 1; min-width: 0; border: 0; background: transparent; color: #fff; font-size: 14px; outline: none; }
+  .code-row input::placeholder { color: #8b95a6; }
+  .getcode { border: 0; background: none; color: #e10600; font-size: 14px; cursor: pointer; white-space: nowrap; padding: 0; }
+  .getcode.wait { color: #8b95a6; cursor: default; }
+  .sms-ok { width: 100%; height: 44px; margin-top: 16px; border: 0; border-radius: 22px; background: #e10600; color: #fff; font-size: 16px; cursor: pointer; }
+  .sent { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); background: #3a1512; color: #fff; border-radius: 8px; padding: 8px 14px; font-size: 13px; white-space: nowrap; }
+  @keyframes rot { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+  <a class="back-prd" href="./index.html">返回需求</a>
+  <div class="chrome">
+    <div class="switch">
+      <button id="sw-pc" type="button">PC</button>
+      <button id="sw-h5" type="button">H5</button>
+      <i class="div"></i>
+      <button id="sw-off" type="button">不开启提款验证</button>
+      <button id="sw-on" type="button">开启提款验证</button>
+    </div>
+    <p class="demo-note">演示验证码 <b>123456</b>。空着或填错点确定，停在验证码页。</p>
+  </div>
+
+  <div id="pc">
+    <div class="pc-top">
+      <div class="logo">演示站</div>
+      <div class="pc-nav"><span>首页</span><span>活动</span><span>赛事</span><span>直播</span></div>
+      <div class="pc-user">用户A　0.89　充值</div>
+    </div>
+    <div class="pc-mask">
+      <div class="pc-win">
+        <button class="pc-x" type="button">×</button>
+        <div class="pc-head">
+          <div class="avatar">☺</div>
+          <div class="who">用户A<small>ID: 10001</small></div>
+          <div class="wallet"><b>我的钱包</b><div>CNY 0.89</div></div>
+        </div>
+        <div class="tabs"><button type="button">充值</button><button class="on" type="button">提现</button></div>
+        <div class="sec">提现类型</div>
+        <div class="chips" id="pc-types"></div>
+        <div class="add" id="pc-add"></div>
+        <div class="sec">提现金额</div>
+        <div class="amts" id="pc-amts"></div>
+        <div class="note" id="pc-cur"></div>
+        <div class="sec">预约提现时间</div>
+        <div class="slots" id="pc-slots"></div>
+        <div class="foot">
+          <button class="mini" type="button">联系客服</button>
+          <button class="mini" type="button">提现教程</button>
+          <button class="mini" type="button">资金明细</button>
+          <button class="go" id="pc-go" type="button">提现</button>
+        </div>
+        <div class="note">当您使用<b>专属提现</b>方式提现到账后，请及时点击【<b>确认收款</b>】。为了提现极速到账，请务必按规则操作！！</div>
+        <div class="overlay" id="pc-over"><div class="dlg" id="pc-dlg"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="h5">
+    <div class="phone">
+      <div class="h-status"><span>9:41</span><span>5G</span></div>
+      <div class="h-bar"><span>充值</span><span class="on">提现</span><span class="h-svc">🎧</span></div>
+      <div class="h-body">
+        <div class="asset">
+          <div class="lab">我的资产</div>
+          <div class="num">¥ 851.63</div>
+          <div class="vip"><span>SVIP0</span><span>SVIP1</span></div>
+        </div>
+        <div class="h-sec">提现类型</div>
+        <div class="h-chips" id="h5-types"></div>
+        <div class="h-sec" id="h5-payee-title">到账银行</div>
+        <div class="bank" id="h5-payee"></div>
+        <div class="h-sec">提现金额</div>
+        <div class="h-amts" id="h5-amts"></div>
+        <div class="h-sec">预约提现时间</div>
+        <div class="h-slots" id="h5-slots"></div>
+        <button class="h-go" id="h5-go" type="button">提现</button>
+        <div class="h-note">为了提现极速到账，请务必按规则操作！到账后请点击【确认到账】。</div>
+      </div>
+      <div class="h-nav"><div>首页</div><div class="on">充提</div><div>优惠</div><div>注单</div><div>我的</div></div>
+      <div class="overlay" id="h5-over"><div class="dlg" id="h5-dlg"></div></div>
+    </div>
+  </div>
+
+<script>
+const amounts = [100,200,300,500,1000,2000,3000,5000,10000,20000,30000,50000];
+const pcSlots = [
+  ["now","即时提现",""],
+  ["h6","预约提现-0~6小时","加送0.5%上限60元"],
+  ["h12","预约提现-0~12小时","加送0.7%上限136元"],
+  ["h18","预约提现-0~18小时","加送0.9%上限286元"]
+];
+const h5Slots = [
+  ["now","即时提现",""],
+  ["h6","预约提现(0-6小时)","加送0.5%上限68元"],
+  ["h12","预约提现(0-12小时)","加送0.7%上限136元"],
+  ["h18","预约提现(0-18小时)","加送0.9%上限288元"]
+];
+const types = {
+  exclusive: { name:"专属提现", payee:null, hint:"请先添加银行卡>>" },
+  bank: { name:"银行卡提现", label:"到账银行", payee:"工商银行（尾号5616）" },
+  usdt: { name:"USDT提现", label:"收款地址", net:"TRC20", payee:"TXq8mN2pL9sD4vR7wH3cF6bA1eY5uJ9nP" },
+  eb: { name:"EB Pay提现", label:"EB Pay账号", payee:"EB****2186" },
+  cb: { name:"CB Pay提现", label:"CB Pay账号", payee:"CB****9041" },
+  jd: { name:"JD Pay提现", label:"JD账号", payee:"jd****6621" },
+  alipay: { name:"支付宝收款码", label:"支付宝账号", payee:"138****8000", h5:true }
+};
+const q = new URLSearchParams(location.search);
+const state = { view: q.get("view")==="h5"?"h5":"pc", type:"bank", amount:100, schedule:"now", sms: q.get("sms")!=="0", phase: q.get("open")==="1"?"confirm":"form", code:"", sent:false, wait:0 };
+let smsTimer = null;
+function clearSmsTimer() { if (smsTimer) { clearInterval(smsTimer); smsTimer = null; } }
+if (q.get("shot")==="1") document.body.classList.add("shot");
+
+function slotText(which) {
+  const list = which==="h5" ? h5Slots : pcSlots;
+  return list.find(s => s[0]===state.schedule);
+}
+function rows() {
+  const t = types[state.type];
+  const s = slotText(state.view);
+  const list = [["提现类型", t.name]];
+  if (t.net) list.push(["网络", t.net]);
+  if (t.payee) list.push([t.label, t.payee]);
+  list.push(["提现金额", state.type==="usdt" ? state.amount+" USDT" : String(state.amount)]);
+  list.push(["预约提现", s[2] ? s[1]+"（"+s[2]+"）" : s[1]]);
+  return list;
+}
+function dialogHTML(which) {
+  if (state.phase==="loading") {
+    return '<div class="mid"><div class="spin"></div><h3>正在提交提现申请</h3><p>请稍候，不要重复滑动</p></div>';
+  }
+  if (state.phase==="success") {
+    return '<div class="mid"><div class="okdot">✓</div><h3>提现申请已提交</h3><p>这一笔已按刚才确认的收款信息提交</p><button class="know" type="button" id="know-'+which+'">我知道了</button></div>';
+  }
+  if (state.phase==="sms") {
+    const wait = state.wait>0 ? state.wait+"s后重发" : "获取验证码";
+    const waitCls = state.wait>0 ? "getcode wait" : "getcode";
+    return '<button class="x" type="button" id="x-'+which+'">×</button><h3>提现验证码</h3>'
+      +'<div class="sms-tip">为了您的账户安全，我们已给您绑定的手机号发送短信验证码</div>'
+      +'<div class="sms-phone">绑定的手机号码：+86186****4563</div>'
+      +'<div class="code-row"><i>✓</i><input id="code-'+which+'" placeholder="请输入手机验证码" value="'+state.code.replace(/"/g,"")+'" />'
+      +'<button class="'+waitCls.trim()+'" type="button" id="get-'+which+'">'+wait+'</button></div>'
+      +'<button class="sms-ok" type="button" id="ok-'+which+'">确定</button>';
+  }
+  const lines = rows().map(r => '<div class="line"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>').join("");
+  return '<button class="x" type="button" id="x-'+which+'">×</button><h3>确认提现信息</h3>'+lines
+    +'<div class="warn">请仔细核对本笔到账信息。银行卡核对开户行与卡号尾号；虚拟币核对网络与完整收款地址；同时核对提现金额、预约提现时间。选错后款项将进入错误账户，提交后无法撤回。</div>'
+    +'<div class="slide" id="slide-'+which+'"><div class="fill"></div><div class="chevs"><i></i><i></i><i></i></div><div class="slabel">滑动确认提现</div><div class="knob" id="knob-'+which+'"><i></i></div></div>';
+}
+function paintDialog(which) {
+  const over = document.getElementById(which+"-over");
+  const dlg = document.getElementById(which+"-dlg");
+  const open = state.phase!=="form";
+  over.classList.toggle("show", open);
+  dlg.classList.toggle("sms", state.phase==="sms");
+  if (!open) return;
+  dlg.innerHTML = dialogHTML(which);
+  const x = document.getElementById("x-"+which);
+  if (x) x.onclick = state.phase==="sms" ? backToConfirm : closeDlg;
+  const code = document.getElementById("code-"+which);
+  if (code) code.oninput = () => { state.code = code.value; };
+  const get = document.getElementById("get-"+which);
+  if (get) get.onclick = sendCode;
+  const ok = document.getElementById("ok-"+which);
+  if (ok) ok.onclick = confirmCode;
+  const know = document.getElementById("know-"+which);
+  if (know) know.onclick = closeDlg;
+  const slide = document.getElementById("slide-"+which);
+  const knob = document.getElementById("knob-"+which);
+  if (slide && knob) bindSlide(slide, knob);
+}
+function closeDlg() { clearSmsTimer(); state.phase = "form"; state.code = ""; state.sent = false; state.wait = 0; paint(); }
+function backToConfirm() { clearSmsTimer(); state.phase = "confirm"; state.code = ""; state.sent = false; state.wait = 0; paint(); }
+function startSubmit() {
+  state.phase = "loading";
+  paint();
+  setTimeout(() => { state.phase = "success"; paint(); }, 900);
+}
+function tickWait() {
+  ["pc","h5"].forEach(which => {
+    const get = document.getElementById("get-"+which);
+    if (!get) return;
+    get.textContent = state.wait>0 ? state.wait+"s后重发" : "获取验证码";
+    get.classList.toggle("wait", state.wait>0);
+  });
+}
+function sendCode() {
+  if (state.wait>0) return;
+  state.sent = true;
+  state.wait = 60;
+  ["pc","h5"].forEach(which => {
+    const dlg = document.getElementById(which+"-dlg");
+    if (!dlg) return;
+    const sent = document.createElement("div");
+    sent.className = "sent";
+    sent.textContent = "发送成功";
+    dlg.prepend(sent);
+  });
+  tickWait();
+  clearSmsTimer();
+  smsTimer = setInterval(() => {
+    state.wait -= 1;
+    if (state.wait<=58) document.querySelectorAll(".sent").forEach(n => n.remove());
+    if (state.wait<=0) { state.wait = 0; clearSmsTimer(); }
+    if (state.phase!=="sms") { clearSmsTimer(); return; }
+    tickWait();
+  }, 1000);
+}
+function showSmsTip(text) {
+  ["pc","h5"].forEach(which => {
+    const dlg = document.getElementById(which+"-dlg");
+    if (!dlg) return;
+    dlg.querySelectorAll(".sent").forEach(n => n.remove());
+    const tip = document.createElement("div");
+    tip.className = "sent";
+    tip.textContent = text;
+    dlg.prepend(tip);
+    setTimeout(() => tip.remove(), 2000);
+  });
+}
+function confirmCode() {
+  const code = state.code.trim();
+  if (!code) return;
+  if (code !== "123456") {
+    showSmsTip("验证码错误");
+    return;
+  }
+  clearSmsTimer();
+  startSubmit();
+}
+function bindSlide(slide, knob) {
+  const fill = slide.querySelector(".fill");
+  const label = slide.querySelector(".slabel");
+  const chevs = slide.querySelector(".chevs");
+  let drag = false, startX = 0, left = 0;
+  const max = () => slide.clientWidth - knob.offsetWidth - 8;
+  function paintAt(n) {
+    knob.style.left = (4+n)+"px";
+    fill.style.width = (n<=0 ? 0 : n + knob.offsetWidth + 4)+"px";
+    const p = max() ? n / max() : 0;
+    label.style.opacity = String(Math.max(0, 1 - p*3));
+    chevs.style.opacity = p > 0.08 ? "1" : "0";
+    chevs.style.width = Math.max(0, n - 4)+"px";
+  }
+  function move(clientX) {
+    if (!drag) return;
+    left = Math.max(0, Math.min(max(), clientX - startX));
+    paintAt(left);
+  }
+  function end() {
+    if (!drag) return;
+    drag = false;
+    if (left > max()*0.86) {
+      paintAt(max());
+      if (state.sms) { state.phase = "sms"; state.code = ""; state.sent = false; state.wait = 0; paint(); }
+      else startSubmit();
+    } else {
+      slide.classList.add("back");
+      left = 0;
+      paintAt(0);
+    }
+  }
+  knob.onpointerdown = (e) => {
+    drag = true;
+    slide.classList.remove("back");
+    startX = e.clientX - left;
+    knob.setPointerCapture(e.pointerId);
+  };
+  knob.onpointermove = (e) => move(e.clientX);
+  knob.onpointerup = end;
+  knob.onpointercancel = end;
+}
+function tryOpen() {
+  const t = types[state.type];
+  if (!t.payee) return;
+  state.phase = "confirm";
+  paint();
+}
+function btn(cls, on, text, fn) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = cls + (on ? " on" : "");
+  b.textContent = text;
+  b.onclick = fn;
+  return b;
+}
+function paintTypes(el, h5) {
+  el.innerHTML = "";
+  Object.keys(types).forEach(id => {
+    const t = types[id];
+    if (t.h5 && !h5) return;
+    el.appendChild(btn(h5?" ":"chip", state.type===id, t.name, () => { state.type = id; paint(); }));
+  });
+}
+function paintAmts(el, h5) {
+  el.innerHTML = "";
+  amounts.forEach(n => el.appendChild(btn(h5?" ":"amt", state.amount===n, n.toLocaleString("en-US"), () => { state.amount = n; paint(); })));
+}
+function paintSlots(el, which) {
+  el.innerHTML = "";
+  const list = which==="h5" ? h5Slots : pcSlots;
+  list.forEach(s => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = (which==="h5"?"h-slot":"slot") + (state.schedule===s[0]?" on":"");
+    b.innerHTML = s[1] + (s[2] ? "<small>"+s[2]+"</small>" : "");
+    b.onclick = () => { state.schedule = s[0]; paint(); };
+    el.appendChild(b);
+  });
+}
+function paint() {
+  document.body.classList.toggle("view-pc", state.view==="pc");
+  document.body.classList.toggle("view-h5", state.view==="h5");
+  document.getElementById("sw-pc").classList.toggle("on", state.view==="pc");
+  document.getElementById("sw-h5").classList.toggle("on", state.view==="h5");
+  document.getElementById("sw-on").classList.toggle("on", state.sms);
+  document.getElementById("sw-off").classList.toggle("on", !state.sms);
+  paintTypes(document.getElementById("pc-types"), false);
+  paintTypes(document.getElementById("h5-types"), true);
+  paintAmts(document.getElementById("pc-amts"), false);
+  paintAmts(document.getElementById("h5-amts"), true);
+  paintSlots(document.getElementById("pc-slots"), "pc");
+  paintSlots(document.getElementById("h5-slots"), "h5");
+  const t = types[state.type];
+  document.getElementById("pc-add").textContent = t.payee ? "" : (t.hint || "");
+  document.getElementById("pc-cur").textContent = "当前提现金额："+state.amount;
+  const title = document.getElementById("h5-payee-title");
+  const payee = document.getElementById("h5-payee");
+  if (!t.payee) { title.textContent = "收款账户"; payee.textContent = t.hint || "请先添加"; }
+  else if (t.net) { title.textContent = "收款地址"; payee.textContent = t.net+"　"+t.payee; }
+  else { title.textContent = t.label; payee.textContent = t.payee; }
+  paintDialog("pc");
+  paintDialog("h5");
+}
+document.getElementById("sw-pc").onclick = () => { state.view = "pc"; closeDlg(); };
+document.getElementById("sw-h5").onclick = () => { state.view = "h5"; closeDlg(); };
+document.getElementById("sw-on").onclick = () => { state.sms = true; closeDlg(); };
+document.getElementById("sw-off").onclick = () => { state.sms = false; closeDlg(); };
+document.getElementById("pc-go").onclick = tryOpen;
+document.getElementById("h5-go").onclick = tryOpen;
+paint();
+if (window.parent === window) document.documentElement.classList.add("standalone");
+</script>
+</body>
+</html>

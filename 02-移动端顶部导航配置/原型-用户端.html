@@ -19,6 +19,14 @@
       border-radius: 6px; color: #0958d9; font-size: 12px; line-height: 1.6;
     }
     .hint code { font-size: 11px; background: #fff; padding: 0 4px; border-radius: 2px; border: 1px solid #91caff; }
+    a.back-prd {
+      position: fixed; top: 10px; right: 12px; z-index: 200;
+      display: none; align-items: center; height: 32px; padding: 0 12px;
+      border-radius: 8px; background: #1d4ed8; color: #fff;
+      text-decoration: none; font-size: 13px; font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,.22);
+    }
+    html.standalone a.back-prd { display: inline-flex; }
     .bar { max-width: 1180px; margin: 0 auto 14px; }
     .site-row, .sim-row {
       display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
@@ -94,6 +102,7 @@
   </style>
 </head>
 <body>
+  <a class="back-prd" href="./index.html">返回需求</a>
   <div class="hint">
     <b>本页仅用户端</b>：皮肤按 <code>navItemCode</code>（<code>vb</code>／<code>va</code>／<code>game</code>／<code>live</code>／<code>square</code>）绑定。<b>本需求不管调位</b>；下方「顺序」开关仅 <b>模拟</b>既有导航排序，用来验证调位后图仍跟代号、不会对错。选中按代号。中国站第 4 格按有／无直播取 <code>live</code>／<code>square</code>。
   </div>
@@ -279,6 +288,7 @@
     }
     window.addEventListener('load', notifyH); setTimeout(notifyH, 100); setTimeout(notifyH, 400);
     render();
+    if (window.parent === window) document.documentElement.classList.add("standalone");
   </script>
 </body>
 </html>
